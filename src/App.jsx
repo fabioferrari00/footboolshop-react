@@ -1,13 +1,27 @@
-import { useState } from 'react'
-import Footer from './components/Footer'
+import DefaultLayout from './layouts/DefaultLayout'
+import { BrowserRouter, Routes, Route } from 'react-router-dom'
+import HomePage from '../pages/HomePage'
+import DetailProductPage from '../pages/DetailProductPage'
+import ProductsPage from '../pages/ProductsPage'
+import ContactsPage from '../pages/ContactsPage'
+import AboutUsPage from '../pages/AboutUsPage'
 
 
 function App() {
   return (
     <>
-      <h1>Iniiziamo!</h1>
 
-      <Footer />
+      <BrowserRouter>
+        <Routes>
+          <Route element={<DefaultLayout />}>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/products' element={<ProductsPage />} />
+            <Route path='/product/:id' element={<DetailProductPage />} />
+            <Route path='/contacts' element={<ContactsPage />} />
+            <Route path='/about_us' element={<AboutUsPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }

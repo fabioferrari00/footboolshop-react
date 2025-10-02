@@ -47,3 +47,8 @@ footer {
   .social-icon:hover {
     opacity: 0.8;
   }
+
+.logo {
+  max-width: 65px;
+}
+
