@@ -2,6 +2,9 @@ import DefaultLayout from './layouts/DefaultLayout'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import HomePage from '../pages/HomePage'
 import DetailProductPage from '../pages/DetailProductPage'
+import ProductsPage from '../pages/ProductsPage'
+import ContactsPage from '../pages/ContactsPage'
+import AboutUsPage from '../pages/AboutUsPage'
 
 function App() {
   return (
@@ -11,7 +14,10 @@ function App() {
         <Routes>
           <Route element={<DefaultLayout />}>
             <Route path='/' element={<HomePage />} />
+            <Route path='/products' element={<ProductsPage />} />
             <Route path='/product/:id' element={<DetailProductPage />} />
+            <Route path='/contacts' element={<ContactsPage />} />
+            <Route path='/about_us' element={<AboutUsPage />} />
           </Route>
         </Routes>
       </BrowserRouter>
