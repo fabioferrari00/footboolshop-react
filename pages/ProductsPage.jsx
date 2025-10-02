@@ -43,6 +43,39 @@ const ProductsPage = () => {
           </div>
 
         </div>
+        <div className="col-12 col-md-6 col-lg-4">
+          <div className="card">
+            <img src="https://calcioitalia.com/media/cache/sylius_shop_product_large_thumbnail/71/53/65d1bc5be82a13bb5919c82b3927.jpeg" className="card-img-top" alt="Product 1" />
+            <div className="card-body">
+              <h5 className="card-title">Scarpe da Calcio</h5>
+              <p className="card-text">Le migliori scarpe per il tuo gioco.</p>
+              <a href="#" className="btn btn-primary">Aggiungi Al Carrello</a>
+            </div>
+          </div>
+
+        </div>
+        <div className="col-12 col-md-6 col-lg-4">
+          <div className="card">
+            <img src="https://example.com/inter-shorts.jpg" className="card-img-top" alt="Product 1" />
+            <div className="card-body">
+              <h5 className="card-title">Scarpe da Calcio</h5>
+              <p className="card-text">Le migliori scarpe per il tuo gioco.</p>
+              <a href="#" className="btn btn-primary">Aggiungi Al Carrello</a>
+            </div>
+          </div>
+
+        </div>
+        <div className="col-12 col-md-6 col-lg-4">
+          <div className="card">
+            <img src="https://example.com/inter-shorts.jpg" className="card-img-top" alt="Product 1" />
+            <div className="card-body">
+              <h5 className="card-title">Scarpe da Calcio</h5>
+              <p className="card-text">Le migliori scarpe per il tuo gioco.</p>
+              <a href="#" className="btn btn-primary">Aggiungi Al Carrello</a>
+            </div>
+          </div>
+
+        </div>
       </div>
     </div>
   )
