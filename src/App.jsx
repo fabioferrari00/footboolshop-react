@@ -1,4 +1,5 @@
 import { useState } from 'react'
+import Footer from './components/Footer'
 
 
 function App() {
@@ -6,6 +7,7 @@ function App() {
     <>
       <h1>Iniiziamo!</h1>
 
+      <Footer />
     </>
   )
 }
