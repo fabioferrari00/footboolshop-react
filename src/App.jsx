@@ -1,11 +1,11 @@
 import { useState } from 'react'
+import Header from './components/Header'
 
 
 function App() {
   return (
     <>
-      <h1>Iniiziamo!</h1>
-
+      <Header></Header>
     </>
   )
 }
