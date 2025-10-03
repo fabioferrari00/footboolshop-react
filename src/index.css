@@ -9,7 +9,8 @@ footer {
   font-family: "Grape Nuts", cursive;
   font-weight: 400;
   font-style: normal;
-  font-size: 4rem;
+  font-size: 3rem;
+  text-shadow: 3px 3px 1px rgba(0, 0, 0, 0.8);
 }
 
 .bold {
@@ -17,38 +18,37 @@ footer {
 }
 
 .social-icon {
-    color: #fff;
-    width: 60px;
-    height: 60px;
-    border-radius: 50%;
-    display: inline-flex;
-    justify-content: center;
-    align-items: center;
-    text-decoration: none;
-  }
+  color: #fff;
+  width: 60px;
+  height: 60px;
+  border-radius: 50%;
+  display: inline-flex;
+  justify-content: center;
+  align-items: center;
+  text-decoration: none;
+}
 
 
-  .social-icon.facebook {
-    background-color: #3b5998;
-  }
+.social-icon.facebook {
+  background-color: #3b5998;
+}
 
-  .social-icon.instagram {
-    background-color: #e4405f;
-  }
+.social-icon.instagram {
+  background-color: #e4405f;
+}
 
-  .social-icon.twitter {
-    background-color: #1da1f2;
-  }
+.social-icon.twitter {
+  background-color: #1da1f2;
+}
 
-  .social-icon.youtube {
-    background-color: #ff0000;
-  }
+.social-icon.youtube {
+  background-color: #ff0000;
+}
 
-  .social-icon:hover {
-    opacity: 0.8;
-  }
+.social-icon:hover {
+  opacity: 0.8;
+}
 
 .logo {
   max-width: 65px;
 }
-
