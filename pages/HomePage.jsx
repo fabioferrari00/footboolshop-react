@@ -19,7 +19,6 @@ const HomePage = () => {
                 <div className="card-body">
                   <h5 className="text-decoration-none card-title">Maglia Inter</h5>
                   <p className="text-decoration-none card-text">La maglia più brutta della storia.</p>
-                  <a href="#" className="btn btn-primary">Aggiungi Al Carrello</a>
                 </div>
               </div>
             </Link>
