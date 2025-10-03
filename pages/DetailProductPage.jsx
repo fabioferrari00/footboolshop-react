@@ -1,5 +1,6 @@
 import React from 'react'
 import 'bootstrap/dist/css/bootstrap.min.css';
+import Consigliati from '../src/components/Consigliati';
 
 const DetailProductPage = () => {
   //detaglio statico del prodotto 
@@ -39,6 +40,7 @@ const DetailProductPage = () => {
           </div>
         </div>
       </div>
+      <Consigliati />
     </div>
   )
 }

@@ -52,14 +52,17 @@ footer {
 }
 
 .logo {
-  max-width: 65px;
   color: #fff;
-  width: 60px;
-  height: 60px;
+  width: 150px;
+  height: 150px;
   border-radius: 50%;
   display: inline-flex;
   justify-content: center;
   align-items: center;
+  text-decoration: none;
+}
+
+header a {
   text-decoration: none;
 }
 
@@ -114,8 +117,8 @@ footer {
   opacity: 0.8;
 }
 
-.logo {
-  max-width: 65px;
+.menu a a {
+  text-decoration: none !important;
 }
 
 .card {
@@ -129,7 +132,6 @@ footer {
   object-fit: cover;
   object-position: center;
 }
-
 
 /* ---------- J U M B O T R O N */
 
