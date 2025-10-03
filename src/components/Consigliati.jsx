@@ -11,7 +11,7 @@ const Consigliati = () => {
   ];
 
   return (
-    <div id="carouselExample" className="carousel slide mt-4" data-bs-interval="false">
+    <div id="carouselExample" className="carousel slide mt-5" data-bs-interval="false">
       <div className="carousel-inner">
         {/* Primo gruppo */}
         <div className="carousel-item active">
