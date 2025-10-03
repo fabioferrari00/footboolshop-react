@@ -20,7 +20,7 @@ const DetailProductPage = () => {
     <div className="container my-5">
       <div className="row g-4">
         <div className="col-md-6">
-          <img src="{prodotto.immagine}" alt="{prodotto nome}" className='img-fluid rounded' />
+          <img src={prodotto.immagine} alt={prodotto.nome} className='img-fluid rounded' />
         </div>
         {/*dettagi prodotto*/}
         <div className="col-md-6">
