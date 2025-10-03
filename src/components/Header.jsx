@@ -18,7 +18,7 @@ const Header = () => {
           </button>
           <div className="collapse navbar-collapse" id="navbarNav">
             <div className="navbar-nav">
-              <Link className="nav-item nav-link" to={`/`}>Home</Link>
+              <Link className="nav-item nav-link" aria-current="page" to={`/`}>Home</Link>
               <Link className="nav-item nav-link" to={`/products`}>Prodotti</Link>
               <Link className="nav-item nav-link" to={`/contacts`}>Contatti</Link>
               <Link className="nav-item nav-link" to={`/about_us`}>Chi siamo</Link>
