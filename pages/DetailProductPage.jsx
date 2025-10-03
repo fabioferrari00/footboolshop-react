@@ -4,7 +4,7 @@ import 'bootstrap/dist/css/bootstrap.min.css';
 const DetailProductPage = () => {
   //detaglio statico del prodotto 
   const prodotto = {
-    
+
     nome: "Maglia Home Inter 2025",
     prezzo: "€89,90",
     descrizione: "Maglia ufficiale da gara Inter 2025 in tessuto tecnico traspirante con dettagli ricamati.",
@@ -16,19 +16,19 @@ const DetailProductPage = () => {
     ]
   }
   return (
-   <div className="container my-5">
-    <div className="row g-4">
-      <div className="col-md-6">
-        <img src="{prodotto.immagine}" alt="{prodotto nome}" className='img-fluid rounded' />
-      </div>
-      {/*dettagi prodotto*/}
-      <div className="col-md-6">
-        <h1>{prodotto.nome}</h1>
-        <h2 className='text-success'>{prodotto.prezzo}</h2>
-        <p>{prodotto.descrizione}</p>
+    <div className="container my-5">
+      <div className="row g-4">
+        <div className="col-md-6">
+          <img src={prodotto.immagine} alt={prodotto.nome} className='img-fluid rounded' />
+        </div>
+        {/*dettagi prodotto*/}
+        <div className="col-md-6">
+          <h1>{prodotto.nome}</h1>
+          <h2 className='text-success'>{prodotto.prezzo}</h2>
+          <p>{prodotto.descrizione}</p>
 
-        <h4>detagli:</h4>
-         <ul>
+          <h4>detagli:</h4>
+          <ul>
             {prodotto.dettagli.map((dett, index) => (
               <li key={index}>{dett}</li>
             ))}
@@ -37,9 +37,9 @@ const DetailProductPage = () => {
             <button className='btn btn-primary me-2'>Aggiungi al carrello</button>
             <button className='btn btn-primary me-2'>Preferiti</button>
           </div>
+        </div>
       </div>
     </div>
-   </div>
   )
 }
 
