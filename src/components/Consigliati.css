@@ -37,3 +37,15 @@
     background-color: rgba(0, 0, 0, 0.8);
     filter: invert(0);
 }
+
+.carousel-item img {
+    height: 250px;
+    object-fit: cover;
+    border-radius: 10px;
+    transition: transform 0.4s ease;
+}
+
+.carousel-item img:hover {
+    transform: scale(1.05);
+    cursor: pointer;
+}
