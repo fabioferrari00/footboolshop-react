@@ -17,17 +17,17 @@ const Footer = () => {
           </div>
           <div className="col-6">
             <div id='socials d-flex justify-content-end align-items-center'>
-              <div class="container text-center">
-                <h2 class="mb-4 text-white">Seguici sui Social!</h2>
-                <div class="social-icons">
-                  <a href="#" class="social-icon facebook me-3">
-                    <i class="fab fa-facebook-f fa-2x"></i></a>
-                  <a href="#" class="social-icon instagram me-3">
-                    <i class="fab fa-instagram fa-2x"></i></a>
-                  <a href="#" class="social-icon twitter me-3">
-                    <i class="fab fa-twitter fa-2x"></i></a>
-                  <a href="#" class="social-icon youtube">
-                    <i class="fab fa-youtube fa-2x"></i></a>
+              <div className="container text-center">
+                <h2 className="mb-4 text-white">Seguici sui Social!</h2>
+                <div className="social-icons">
+                  <a href="#" className="social-icon facebook me-3">
+                    <i className="fab fa-facebook-f fa-2x"></i></a>
+                  <a href="#" className="social-icon instagram me-3">
+                    <i className="fab fa-instagram fa-2x"></i></a>
+                  <a href="#" className="social-icon twitter me-3">
+                    <i className="fab fa-twitter fa-2x"></i></a>
+                  <a href="#" className="social-icon youtube">
+                    <i className="fab fa-youtube fa-2x"></i></a>
                 </div>
               </div>
             </div>
