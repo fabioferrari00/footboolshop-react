@@ -1,7 +1,20 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
+import axios from 'axios';
+import { useState, useEffect } from 'react';
 
 const ProductsPage = () => {
+
+  const [products, setProducts] = useState([]);
+
+  const fetchProducts = () => {
+    axios.get("http://localhost:3000/products").then((resp) => {
+      setProducts(resp.data)
+    })
+  }
+
+  useEffect(fetchProducts, [])
+
   return (
     <div className="container">
       <div className="row">
@@ -10,73 +23,28 @@ const ProductsPage = () => {
         </div>
 
       </div>
-      <div className="row">
-        <div className="col-12 col-md-6 col-lg-4">
-          <div className="card">
-            <img src="https://calcioitalia.com/media/cache/sylius_shop_product_large_thumbnail/1c/76/801e75123c83d43cdcdc15f20b78.jpeg" className="card-img-top" alt="Product 1" />
-            <div className="card-body">
-              <h5 className="card-title">Scarpe da Calcio</h5>
-              <p className="card-text">Le migliori scarpe per il tuo gioco.</p>
-              <a href="#" className="btn btn-primary">Aggiungi Al Carrello</a>
-            </div>
-          </div>
+      <div className="row gy-3">
+        {products.map((product) => {
 
-        </div>
-        <div className="col-12 col-md-6 col-lg-4">
-          <div className="card">
-            <img src="https://assets.goal.com/images/v3/blt749df1fb5a388269/GOAL_-_Multiple_Images_-_2_Split_-_Facebook_(68).jpg?auto=webp&format=pjpg&width=3840&quality=60" className="card-img-top" alt="Product 1" />
-            <div className="card-body">
-              <h5 className="card-title">Scarpe da Calcio</h5>
-              <p className="card-text">Le migliori scarpe per il tuo gioco.</p>
-              <a href="#" className="btn btn-primary">Aggiungi Al Carrello</a>
-            </div>
-          </div>
+          return (
+            <div className="col-12 col-md-6 col-lg-4" >
+              <Link to={`/product/${product.slug}`}>
+                <div className="card ">
+                  <img src={product.image_url} className="card-img-top" alt="Product 1" />
 
-        </div>
-        <div className="col-12 col-md-6 col-lg-4">
-          <div className="card">
-            <img src="https://store.inter.it/images/inter/products/large/IN25A05.webp" className="card-img-top" alt="Product 1" />
-            <div className="card-body">
-              <h5 className="card-title">Scarpe da Calcio</h5>
-              <p className="card-text">Le migliori scarpe per il tuo gioco.</p>
-              <a href="#" className="btn btn-primary">Aggiungi Al Carrello</a>
+                  <div className="card-body">
+                    <h5 className="text-decoration-none card-title">{product.name}</h5>
+                    <p className="text-decoration-none card-text">{product.description}</p>
+                  </div>
+                </div>
+              </Link>
             </div>
-          </div>
 
-        </div>
-        <div className="col-12 col-md-6 col-lg-4">
-          <div className="card">
-            <img src="https://calcioitalia.com/media/cache/sylius_shop_product_large_thumbnail/71/53/65d1bc5be82a13bb5919c82b3927.jpeg" className="card-img-top" alt="Product 1" />
-            <div className="card-body">
-              <h5 className="card-title">Scarpe da Calcio</h5>
-              <p className="card-text">Le migliori scarpe per il tuo gioco.</p>
-              <a href="#" className="btn btn-primary">Aggiungi Al Carrello</a>
-            </div>
-          </div>
+          )
 
-        </div>
-        <div className="col-12 col-md-6 col-lg-4">
-          <div className="card">
-            <img src="https://example.com/inter-shorts.jpg" className="card-img-top" alt="Product 1" />
-            <div className="card-body">
-              <h5 className="card-title">Scarpe da Calcio</h5>
-              <p className="card-text">Le migliori scarpe per il tuo gioco.</p>
-              <a href="#" className="btn btn-primary">Aggiungi Al Carrello</a>
-            </div>
-          </div>
+        })
+        }
 
-        </div>
-        <div className="col-12 col-md-6 col-lg-4">
-          <div className="card">
-            <img src="https://example.com/inter-shorts.jpg" className="card-img-top" alt="Product 1" />
-            <div className="card-body">
-              <h5 className="card-title">Scarpe da Calcio</h5>
-              <p className="card-text">Le migliori scarpe per il tuo gioco.</p>
-              <a href="#" className="btn btn-primary">Aggiungi Al Carrello</a>
-            </div>
-          </div>
-
-        </div>
       </div>
     </div>
   )
