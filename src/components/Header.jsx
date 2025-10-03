@@ -4,10 +4,12 @@ import { Link, NavLink } from 'react-router-dom';
 
 const Header = () => {
   return (
-    <header className="navbar navbar-expand-lg">
+    <header className="navbar navbar-expand-lg bg-body-tertiary">
       <div className="container-fluid d-flex justify-content-between">
         <div className='d-flex align-items-center'>
-          <img className='logo' src="/footboolshop_logo.png" alt="Logo" />
+          <Link to={`/`}>
+            <img className='logo' src="/footboolshop_logo.png" alt="Logo" />
+          </Link>
           <h2>FootBoolShop</h2>
         </div>
         <div>
