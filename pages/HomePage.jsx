@@ -28,7 +28,7 @@ const HomePage = () => {
           {products.map((product) => {
 
             return (
-              <div className="col-12 col-md-6 col-lg-4" key={product.id}>
+              <div className="col-12 col-md-6 col-lg-4 noDecoration" key={product.id}>
                 <Link to={`/product/${product.slug}`} state={{
                   id: product.id
                 }} >
