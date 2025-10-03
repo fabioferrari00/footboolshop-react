@@ -35,7 +35,7 @@ const DetailProductPage = () => {
           <p>{product.description}</p>
 
           <div className='mt-4'>
-            <button className='btn btn-primary me-2'>Aggiungi al carrello</button>
+            <button className='btn btn-primary me-2'>Aggiungi al carrellino</button>
             <button className='btn btn-primary me-2'>Preferiti</button>
           </div>
         </div>
