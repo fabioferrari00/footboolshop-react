@@ -120,6 +120,7 @@ footer {
 
 .card {
     width: 350px;
+    min-height: 550px;
     border: 1px solid black;
 }
 
@@ -128,6 +129,10 @@ footer {
     height: 400px;
     object-fit: cover;
     object-position: center;
+}
+
+.noDecoration a {
+    text-decoration: none;
 }
 
 .w-150 {
