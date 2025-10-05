@@ -16,6 +16,7 @@ const DetailProductPage = () => {
   const fetchProduct = () => {
     axios.get(`http://localhost:3000/products/${id}`).then((resp) => {
       setProduct(resp.data)
+      console.log(resp.data)
     })
   }
 
@@ -40,7 +41,7 @@ const DetailProductPage = () => {
           </div>
         </div>
       </div>
-      <Consigliati />
+      <Consigliati team={product.team_name} excludeId={product.id} />
     </div>
   )
 }
