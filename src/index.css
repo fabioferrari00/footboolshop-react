@@ -195,12 +195,12 @@ footer {
 }
 
 .product-image {
-  width: 100%;
-  max-width: 500px;     
-  height: 400px;        
+  width: 100%; 
+  max-width: 300px;     
+  max-height: 400px;        
   object-fit: contain;  
   display: block;
   margin: 0 auto;
-  background-color: #f8f9fa; 
+  background-color: transparent; 
   border-radius: 10px;
 }
