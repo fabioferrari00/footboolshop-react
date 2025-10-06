@@ -4,7 +4,10 @@ import Consigliati from '../src/components/Consigliati';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useLocation } from "react-router-dom";
+import { useLocation } from "react-router-dom"
+
+
+
 
 const DetailProductPage = () => {
 
@@ -27,7 +30,7 @@ const DetailProductPage = () => {
     <div className="container my-5">
       <div className="row g-4">
         <div className="col-md-6">
-          <img src={product.image_url} alt={product.name} className='img-fluid rounded' />
+          <img src={product.image_url} alt={product.name} className='img-fluid rounded product-image' />
         </div>
         {/*dettagi prodotto*/}
         <div className="col-md-6">
