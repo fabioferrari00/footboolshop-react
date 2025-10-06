@@ -83,12 +83,24 @@ const HomePage = () => {
           </div>
           {products.map((product) => {
             if (product.size == "XXS" || product.size == 36)
-
               return (
                 <div className="col-12 col-md-6 col-lg-4 noDecoration" key={product.id}>
+                   <div className="card position-relative">
+                      <span
+                        className="heart-icon"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleFavorite(product.id);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={favorites.includes(product.id) ? solidHeart : regularHeart}
+                          className={favorites.includes(product.id) ? "liked" : ""}
+                        />
+                      </span>
                   <Link to={`/product/${product.slug}`} state={{
                     id: product.id
-                  }} >
+                  }} >      
                     <div className="card " >
                       <img src={product.image_url} className="card-img-top" alt="Product 1" />
 
@@ -98,6 +110,7 @@ const HomePage = () => {
                       </div>
                     </div>
                   </Link>
+                </div>
                 </div>
               )
           })
