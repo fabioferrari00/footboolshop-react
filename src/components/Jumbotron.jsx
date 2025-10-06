@@ -1,5 +1,5 @@
 import React from "react";
-
+import { Link } from "react-router-dom";
 
 const Jumbotron = () => {
   return (
@@ -7,9 +7,7 @@ const Jumbotron = () => {
       <div>
         <h1 className="hero-title">IL CALCIO &Eacute; QUI. </h1>
         <p className="hero-subtitle">indossa la tua passione</p>
-        <a href="/ultimi-arrivi" className="hero-btn">
-          Ultimi Arrivi
-        </a>
+        <Link className="hero-btn" to={`/products`}>Acquista Subito!</Link>
       </div>
     </div>
   );
