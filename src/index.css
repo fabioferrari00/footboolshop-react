@@ -144,6 +144,17 @@ footer {
 }
 
 
+.product-image {
+  width: 100%; 
+  max-width: 300px;     
+  max-height: 400px;        
+  object-fit: contain;  
+  display: block;
+  margin: 0 auto;
+  background-color: transparent; 
+  border-radius: 10px;
+}
+
 /* Pagine prodotti */
 .section_team {
     font-family: "Grape Nuts", cursive;
@@ -152,6 +163,7 @@ footer {
     font-size: 2.5rem;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
     margin-bottom: 20px;
+
 }
 
 
@@ -172,4 +184,27 @@ footer {
     font-size: 2.5rem;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
     margin-bottom: 20px;
+}
+.card a {
+  text-decoration: none;
+  color: inherit;
+}
+.heart-icon {
+  position: absolute;
+  top: 10px;
+  right: 15px;
+  font-size: 22px;
+  color: gray;
+  z-index: 10;
+  cursor: pointer;
+  user-select: none;
+  transition: color 0.3s ease;
+}
+
+.heart-icon:hover {
+  color: red;
+}
+
+.liked {
+  color: red !important;
 }
