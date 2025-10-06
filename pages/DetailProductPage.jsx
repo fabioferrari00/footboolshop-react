@@ -34,6 +34,8 @@ const DetailProductPage = () => {
           <h1>{product.name}</h1>
           <h2 className='text-success'>{product.price}</h2>
           <p>{product.description}</p>
+          <p>{`Squadra: ${product.team_name}`}</p>
+
 
           <div className='mt-4'>
             <button className='btn btn-primary me-2'>Aggiungi al carrellino</button>

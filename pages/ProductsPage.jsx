@@ -28,8 +28,10 @@ const ProductsPage = () => {
 
           return (
             <div className="col-12 col-md-6 col-lg-4" >
-              <Link to={`/product/${product.slug}`}>
-                <div className="card ">
+              <Link to={`/product/${product.slug}`} state={{
+                id: product.id
+              }} >
+                <div className="card " >
                   <img src={product.image_url} className="card-img-top" alt="Product 1" />
 
                   <div className="card-body">
