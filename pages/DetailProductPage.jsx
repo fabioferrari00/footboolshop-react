@@ -32,9 +32,10 @@ const DetailProductPage = () => {
         {/*dettagi prodotto*/}
         <div className="col-md-6">
           <h1>{product.name}</h1>
-          <h2 className='text-success'>{product.price}</h2>
+          <h2 className='text-success'>{`€ ${product.price}`}</h2>
           <p>{product.description}</p>
           <p>{`Squadra: ${product.team_name}`}</p>
+          <p>{`Taglia: ${product.size}`}</p>
 
 
           <div className='mt-4'>
