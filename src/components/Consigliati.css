@@ -1,13 +1,78 @@
-/* --- IMMAGINI --- */
+/* --- SEZIONE / TITOLI --- */
 
-.carousel-item img {
-    height: 250px;
-    object-fit: cover;
-    border-radius: 10px;
+.related-wrap {
+    position: relative;
+}
+
+.related-title {
+    font-size: 1.25rem;
+    font-weight: 700;
+    letter-spacing: .2px;
+}
+
+.related-badge {
+    font-size: .9rem;
+    padding: .35rem .7rem;
+    border-radius: 999px;
+    background: linear-gradient(90deg, #eef2ff 0%, #ecfdf5 100%);
+    border: 1px solid #e6e6e6;
+    color: #111;
 }
 
 
-/* --- FRECCE --- */
+/* --- CARD --- */
+
+.related-card {
+    border-radius: 12px;
+    overflow: hidden;
+    transition: transform .18s ease, box-shadow .18s ease;
+    background: #fff;
+}
+
+.related-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 10px 22px rgba(0, 0, 0, .08);
+}
+
+.related-imgwrap {
+    background: #fafafa;
+}
+
+
+/* --- CAPTION --- */
+
+.product-caption {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: .5rem;
+}
+
+.caption-name {
+    font-size: .95rem;
+    line-height: 1.25;
+    color: #111;
+}
+
+.caption-price {
+    font-weight: 700;
+    font-size: .95rem;
+    color: #0ea5e9;
+}
+
+
+/* --- IMMAGINI / HOVER --- */
+
+.carousel-item img {
+    transition: transform .35s ease;
+}
+
+.carousel-item img:hover {
+    transform: scale(1.03);
+}
+
+
+/* --- FRECCE + INDICATORI --- */
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
@@ -16,36 +81,28 @@
     height: 3rem;
 }
 
-
-/* sfondo cerchiato semitrasparente per evidenziare */
-
 .carousel-control-prev,
 .carousel-control-next {
-    width: 5%;
+    width: 6%;
 }
 
 .carousel-control-prev-icon,
 .carousel-control-next-icon {
-    background-color: rgba(255, 255, 150, 0.1);
+    background-color: rgba(255, 255, 150, .12);
     border-radius: 50%;
     padding: 10px;
-    transition: background-color 0.2s ease-in-out;
+    transition: background-color .2s ease, filter .2s ease;
 }
 
 .carousel-control-prev-icon:hover,
 .carousel-control-next-icon:hover {
-    background-color: rgba(0, 0, 0, 0.8);
+    background-color: rgba(0, 0, 0, .85);
     filter: invert(0);
 }
 
-.carousel-item img {
-    height: 250px;
-    object-fit: contain;
-    border-radius: 10px;
-    transition: transform 0.4s ease;
-}
-
-.carousel-item img:hover {
-    transform: scale(1.05);
-    cursor: pointer;
+.carousel-indicators [data-bs-target] {
+    background-color: #111;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
 }
