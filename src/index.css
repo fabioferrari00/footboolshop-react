@@ -193,3 +193,14 @@ footer {
     transform: translateY(-3px) scale(1.05);
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
 }
+
+.product-image {
+  width: 100%;
+  max-width: 500px;     
+  height: 400px;        
+  object-fit: contain;  
+  display: block;
+  margin: 0 auto;
+  background-color: #f8f9fa; 
+  border-radius: 10px;
+}
