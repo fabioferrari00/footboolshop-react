@@ -3,18 +3,32 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
+
 
 const HomePage = () => {
 
   const [products, setProducts] = useState([]);
+  const [favorites, setFavorites] = useState([]);
+  
+
 
   const fetchProducts = () => {
     axios.get("http://localhost:3000/products").then((resp) => {
       setProducts(resp.data)
     })
   }
+ useEffect(fetchProducts, [])
 
-  useEffect(fetchProducts, [])
+ const toggleFavorite = (productId) => {
+    setFavorites((prev) =>
+      prev.includes(productId)
+        ? prev.filter((id) => id !== productId)  
+        : [...prev, productId]                    
+    );
+  };
 
 
   return (
@@ -30,19 +44,35 @@ const HomePage = () => {
 
               return (
                 <div className="col-12 col-md-6 col-lg-4 noDecoration" key={product.id}>
+                  <div className="card position-relative">
+                   <span
+                      className="heart-icon"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleFavorite(product.id);
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={favorites.includes(product.id) ? solidHeart : regularHeart}
+                        className={favorites.includes(product.id) ? "liked" : ""}
+                      />
+                    </span>
+                    
+
                   <Link to={`/product/${product.slug}`} state={{
                     id: product.id
                   }} >
-                    <div className="card " >
+                 
                       <img src={product.image_url} className="card-img-top" alt="Product 1" />
 
                       <div className="card-body">
                         <h5 className="text-decoration-none card-title">{product.name}</h5>
                         <p className="text-decoration-none card-text">{product.description}</p>
                       </div>
-                    </div>
+                    
                   </Link>
                 </div>
+              </div>
               )
           })
           }
@@ -74,6 +104,7 @@ const HomePage = () => {
           }
         </div>
       </div>
+      
     </>
   )
 }
