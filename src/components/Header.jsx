@@ -1,6 +1,7 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
-
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
   return (
@@ -20,6 +21,9 @@ const Header = () => {
             <div className="navbar-nav">
               <Link className="nav-item nav-link" aria-current="page" to={`/`}>Home</Link>
               <Link className="nav-item nav-link" to={`/products`}>Prodotti</Link>
+              <Link className="nav-item nav-link" to={`/favorites`}>
+              <FontAwesomeIcon icon={faHeart} style={{ color: 'red', marginRight: '5px' }} />
+               Preferiti </Link>
               <Link className="nav-item nav-link" to={`/contacts`}>Contatti</Link>
               <Link className="nav-item nav-link" to={`/about_us`}>Chi siamo</Link>
             </div>

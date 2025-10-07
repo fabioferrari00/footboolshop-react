@@ -5,7 +5,7 @@ import DetailProductPage from '../pages/DetailProductPage'
 import ProductsPage from '../pages/ProductsPage'
 import ContactsPage from '../pages/ContactsPage'
 import AboutUsPage from '../pages/AboutUsPage'
-
+import FavoritesPage from '../pages/FavoritesPage';
 
 function App() {
   return (
@@ -19,6 +19,7 @@ function App() {
             <Route path='/product/:slug' element={<DetailProductPage />} />
             <Route path='/contacts' element={<ContactsPage />} />
             <Route path='/about_us' element={<AboutUsPage />} />
+            <Route path='/favorites' element={<FavoritesPage />} /> 
           </Route>
         </Routes>
       </BrowserRouter>
