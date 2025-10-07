@@ -19,7 +19,7 @@ const ProductsPage = () => {
     <div className="container">
       <div className="row">
         <div className="col-12 d-flex justify-content-center my-4">
-          <h1>Un ampio catalogo a tua Disposizione!</h1>
+          <h1 className='title' >Un ampio catalogo a tua Disposizione!</h1>
         </div>
 
       </div>
