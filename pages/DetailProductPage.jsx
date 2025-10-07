@@ -4,6 +4,7 @@ import Consigliati from '../src/components/Consigliati';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+import { Link } from 'react-router-dom';
 
 
 
@@ -23,7 +24,7 @@ const DetailProductPage = () => {
     })
   }
 
-  +useEffect(fetchProduct, [slug])
+  useEffect(fetchProduct, [slug])
 
 
   return (
@@ -34,7 +35,10 @@ const DetailProductPage = () => {
         </div>
         {/*dettagi prodotto*/}
         <div className="col-md-6">
-          <h1>{product.name}</h1>
+          <div className="d-flex">
+            <h1>{product.name}</h1>
+            <Link to={`/products/${slug}/edit`}><i className='fas fa-edit'></i></Link>
+          </div>
           <h2 className='text-success'>{`€ ${product.price}`}</h2>
           <p>{product.description}</p>
           <p>{`Squadra: ${product.team_name}`}</p>
