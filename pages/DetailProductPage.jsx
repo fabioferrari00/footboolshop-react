@@ -4,26 +4,26 @@ import Consigliati from '../src/components/Consigliati';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-import { useLocation } from "react-router-dom"
 
 
 
 
 const DetailProductPage = () => {
-
-  const location = useLocation();
-  const { id } = location.state || {};
   const [product, setProduct] = useState({});
 
 
+  //recupero slug
+  const { slug } = useParams();
+
+
   const fetchProduct = () => {
-    axios.get(`http://localhost:3000/products/${id}`).then((resp) => {
+    axios.get(`http://localhost:3000/products/${slug}`).then((resp) => {
       setProduct(resp.data)
       console.log(resp.data)
     })
   }
 
-  useEffect(fetchProduct, [id])
+  +useEffect(fetchProduct, [slug])
 
 
   return (
