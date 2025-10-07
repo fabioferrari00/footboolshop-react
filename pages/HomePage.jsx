@@ -19,16 +19,28 @@ const HomePage = () => {
     axios.get("http://localhost:3000/products").then((resp) => {
       setProducts(resp.data)
     })
+    
   }
-  useEffect(fetchProducts, [])
+  useEffect(() => {
+    const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(savedFavorites);
 
-  const toggleFavorite = (productId) => {
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+}, [favorites])
+
+  
+ const toggleFavorite = (productId) => {
     setFavorites((prev) =>
       prev.includes(productId)
         ? prev.filter((id) => id !== productId)
         : [...prev, productId]
     );
   };
+  
 
 
   return (

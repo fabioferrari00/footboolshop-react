@@ -1,5 +1,7 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, NavLink } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
 
@@ -40,10 +42,13 @@ const Header = () => {
 
           <div className="collapse navbar-collapse" id="navbarNav">
             <div className="navbar-nav">
-              <Link className="nav-item nav-link" to={`/`} onClick={closeMenu}>Home</Link>
-              <Link className="nav-item nav-link" to={`/products`} onClick={closeMenu}>Prodotti</Link>
-              <Link className="nav-item nav-link" to={`/contacts`} onClick={closeMenu}>Contatti</Link>
-              <Link className="nav-item nav-link" to={`/about_us`} onClick={closeMenu}>Chi siamo</Link>
+              <Link className="nav-item nav-link" aria-current="page" to={`/`}>Home</Link>
+              <Link className="nav-item nav-link" to={`/products`}>Prodotti</Link>
+              <Link className="nav-item nav-link" to={`/favorites`}>
+              <FontAwesomeIcon icon={faHeart} style={{ color: 'red', marginRight: '5px' }} />
+               Preferiti </Link>
+              <Link className="nav-item nav-link" to={`/contacts`}>Contatti</Link>
+              <Link className="nav-item nav-link" to={`/about_us`}>Chi siamo</Link>
             </div>
           </div>
         </div>
