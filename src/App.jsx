@@ -5,6 +5,7 @@ import DetailProductPage from '../pages/DetailProductPage'
 import ProductsPage from '../pages/ProductsPage'
 import ContactsPage from '../pages/ContactsPage'
 import AboutUsPage from '../pages/AboutUsPage'
+import EditProduct from '../pages/EditProduct'
 
 
 function App() {
@@ -17,6 +18,7 @@ function App() {
             <Route path='/' element={<HomePage />} />
             <Route path='/products' element={<ProductsPage />} />
             <Route path='/product/:slug' element={<DetailProductPage />} />
+            <Route path='/products/:slug/edit' element={<EditProduct />} />
             <Route path='/contacts' element={<ContactsPage />} />
             <Route path='/about_us' element={<AboutUsPage />} />
           </Route>
