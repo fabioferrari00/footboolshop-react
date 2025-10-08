@@ -1,7 +1,7 @@
 import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart, faHouse, faShirt, faCartShopping, faAddressBook, faFaceSmile } from '@fortawesome/free-solid-svg-icons';
 
 const Header = () => {
 
@@ -43,14 +43,20 @@ const Header = () => {
           <div className="collapse navbar-collapse" id="navbarNav">
             <div className="navbar-nav">
               <div className="navbar-nav">
-                <Link className="nav-item nav-link" to={`/`} onClick={closeMenu}>Home</Link>
-                <Link className="nav-item nav-link" to={`/products`} onClick={closeMenu}>Prodotti</Link>
+                <Link className="nav-item nav-link" to={`/`} onClick={closeMenu}>
+                  <FontAwesomeIcon icon={faHouse} /> Home</Link>
+                <Link className="nav-item nav-link" to={`/products`} onClick={closeMenu}>
+                  <FontAwesomeIcon icon={faShirt} /> Prodotti</Link>
                 <Link className="nav-item nav-link" to={`/favorites`} onClick={closeMenu}>
-                  <FontAwesomeIcon icon={faHeart} style={{ color: 'red', marginRight: '5px' }} />  Preferiti
+                  <FontAwesomeIcon icon={faHeart}     />  Preferiti
                 </Link>
-                <Link className="nav-item nav-link" to={`/cart`} onClick={closeMenu}>Carrello</Link>
-                <Link className="nav-item nav-link" to={`/contacts`} onClick={closeMenu}>Contatti</Link>
-                <Link className="nav-item nav-link" to={`/about_us`} onClick={closeMenu}>Chi siamo</Link>
+                {/* style={{ color: 'red', marginRight: '5px' }} */}
+                <Link className="nav-item nav-link" to={`/cart`} onClick={closeMenu}>
+                  <FontAwesomeIcon icon={faCartShopping} /> Carrello</Link>
+                <Link className="nav-item nav-link" to={`/contacts`} onClick={closeMenu}>
+                  <FontAwesomeIcon icon={faAddressBook} /> Contatti</Link>
+                <Link className="nav-item nav-link" to={`/about_us`} onClick={closeMenu}>
+                  <FontAwesomeIcon icon={faFaceSmile} /> Chi siamo</Link>
               </div>
             </div>
           </div>
