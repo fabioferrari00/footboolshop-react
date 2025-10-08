@@ -58,7 +58,7 @@ function CartPage() {
                 <button
                   // 3. LOGICA: Diminuisci la quantità
                   onClick={() => updateQuantity(item.id, item.quantity - 1)}
-                  className="btn btn-sm btn-outline-secondary"
+                  className="btn btn-sm btn-outline-danger"
                   disabled={item.quantity <= 1} // Disabilita se la quantità è 1
                 >
                   -
@@ -67,7 +67,7 @@ function CartPage() {
                 <button
                   // 4. LOGICA: Aumenta la quantità
                   onClick={() => updateQuantity(item.id, item.quantity + 1)}
-                  className="btn btn-sm btn-outline-secondary"
+                  className="btn btn-sm btn-outline-success"
                 >
                   +
                 </button>
@@ -79,7 +79,7 @@ function CartPage() {
                 <button
                   // 5. LOGICA: Rimuovi l'articolo
                   onClick={() => removeItem(item.id)}
-                  className="btn btn-sm btn-link text-danger p-0"
+                  className="btn btn-danger p-1"
                 >
                   Rimuovi
                 </button>
@@ -90,7 +90,7 @@ function CartPage() {
         </div>
 
         {/* B. Area del Riepilogo Ordine (Totali) */}
-        <div className="col-lg-4 cart-summary bg-light p-4 rounded">
+        <div className="col-lg-4 cart-summary bg-light p-4 rounded border order-cart">
           <h2>Riepilogo Ordine</h2>
 
           <div className="d-flex justify-content-between my-2">
@@ -110,7 +110,7 @@ function CartPage() {
             <h3 className="mb-0">{formatCurrency(total)}</h3>
           </div>
 
-          <Link className="btn btn-primary w-100 checkout-btn" to={`/checkout`}>
+          <Link className="btn btn-success w-100 checkout-btn" to={`/checkout`}>
             Procedi all'acquisto ({formatCurrency(total)})
           </Link>
         </div>
