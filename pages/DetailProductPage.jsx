@@ -14,6 +14,9 @@ const DetailProductPage = () => {
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
 
+  // 3. Aggiungi uno stato per il messaggio di conferma della copia
+  const [copySuccessMessage, setCopySuccessMessage] = useState('');
+
 
   //recupero slug
   const { slug } = useParams();
@@ -31,6 +34,7 @@ const DetailProductPage = () => {
   useEffect(fetchProduct, [slug])
 
   const handleAddToCart = () => {
+
     // Controlliamo che il prodotto esista e che la quantità sia valida
     if (product.id && quantity > 0) {
       console.log('Prodotto aggiunto:', product);
@@ -38,13 +42,15 @@ const DetailProductPage = () => {
       // L'oggetto product contiene già tutti i dati necessari (id, name, price, ecc.)
       addItem(product, quantity);
       console.log('Chiamata addItem terminata. Lo stato del carrello DEVE essere aggiornato.')
-      alert(`${product.name} (x${quantity}) aggiunto al carrello!`);
       // Opzionale: azzerare la quantità
       setQuantity(1);
     } else {
       // Se entri qui, significa che product.id è nullo o quantity è zero
       console.error('ERRORE: Tentativo di aggiungere un prodotto senza ID valido.');
     }
+    setCopySuccessMessage('Articolo aggiunto al carrello!');
+    setTimeout(() => setCopySuccessMessage(''), 3000);
+
   }
 
 
@@ -83,8 +89,10 @@ const DetailProductPage = () => {
               onClick={handleAddToCart} // <-- Collegamento della funzione al click
               disabled={!product.id} // Disabilita se i dati del prodotto non sono ancora caricati
             >
-              Aggiungi al carrellino</button>
+              Aggiungi al carrello</button>
             <button className='btn btn-primary me-2'>Preferiti</button>
+            {/* Messaggio di conferma che appare e scompare */}
+            {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
           </div>
         </div>
       </div>
