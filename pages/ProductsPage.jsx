@@ -1,4 +1,4 @@
-import React from 'react';
+
 import { Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect, useCallback, useMemo } from 'react'; // Rimosso l'import di useMemo duplicato
@@ -9,6 +9,7 @@ import { faHeart as solidHeart, faShareFromSquare } from '@fortawesome/free-soli
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
+  
   const [filters, setFilters] = useState({
     name: '',
     size: '',
