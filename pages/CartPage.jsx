@@ -26,11 +26,13 @@ function CartPage() {
   // Visualizzazione: Carrello vuoto
   if (items.length === 0) {
     return (
-      <div className="cart-page empty">
-        <h1>Il tuo carrello è vuoto</h1>
-        <p>È il momento perfetto per esplorare i nostri prodotti!</p>
-        {/* Inserisci un link alla Home o alla ProductsPage */}
-      </div>
+      <div className="container">
+        <div className="cart-page empty">
+          <h1>Il tuo carrello è vuoto</h1>
+          <p>È il momento perfetto per esplorare i nostri prodotti!</p>
+          {/* Inserisci un link alla Home o alla ProductsPage */}
+        </div>
+      </div >
     );
   }
 
