@@ -4,18 +4,15 @@ import Consigliati from '../src/components/Consigliati';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
-<<<<<<< HEAD
 import { useCart } from '../src/CartContext';
-=======
 import { Link } from 'react-router-dom';
->>>>>>> cddf6b3732e8fa7fe76377859a7ee6336e8bf9fb
 
 
 
 
 const DetailProductPage = () => {
   const [product, setProduct] = useState({});
-  const [quantity, setQuantity] = useState(1); 
+  const [quantity, setQuantity] = useState(1);
 
 
   //recupero slug
@@ -32,26 +29,23 @@ const DetailProductPage = () => {
   }
 
   useEffect(fetchProduct, [slug])
-<<<<<<< HEAD
 
   const handleAddToCart = () => {
-        // Controlliamo che il prodotto esista e che la quantità sia valida
+    // Controlliamo che il prodotto esista e che la quantità sia valida
     if (product.id && quantity > 0) {
-          console.log('Prodotto aggiunto:', product); 
-          console.log('ID Prodotto:', product.id);
-            // L'oggetto product contiene già tutti i dati necessari (id, name, price, ecc.)
+      console.log('Prodotto aggiunto:', product);
+      console.log('ID Prodotto:', product.id);
+      // L'oggetto product contiene già tutti i dati necessari (id, name, price, ecc.)
       addItem(product, quantity);
-       console.log('Chiamata addItem terminata. Lo stato del carrello DEVE essere aggiornato.')
-            alert(`${product.name} (x${quantity}) aggiunto al carrello!`);
-            // Opzionale: azzerare la quantità
-            setQuantity(1);
-        } else {
-            // Se entri qui, significa che product.id è nullo o quantity è zero
-            console.error('ERRORE: Tentativo di aggiungere un prodotto senza ID valido.');
-        }
-    } 
-=======
->>>>>>> cddf6b3732e8fa7fe76377859a7ee6336e8bf9fb
+      console.log('Chiamata addItem terminata. Lo stato del carrello DEVE essere aggiornato.')
+      alert(`${product.name} (x${quantity}) aggiunto al carrello!`);
+      // Opzionale: azzerare la quantità
+      setQuantity(1);
+    } else {
+      // Se entri qui, significa che product.id è nullo o quantity è zero
+      console.error('ERRORE: Tentativo di aggiungere un prodotto senza ID valido.');
+    }
+  }
 
 
   return (
@@ -80,12 +74,12 @@ const DetailProductPage = () => {
               onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
               className="form-control d-inline-block w-auto me-2"
             />
-            <button 
-            className='btn btn-primary me-2'
-            onClick={handleAddToCart} // <-- Collegamento della funzione al click
-            disabled={!product.id} // Disabilita se i dati del prodotto non sono ancora caricati
+            <button
+              className='btn btn-primary me-2'
+              onClick={handleAddToCart} // <-- Collegamento della funzione al click
+              disabled={!product.id} // Disabilita se i dati del prodotto non sono ancora caricati
             >
-            Aggiungi al carrellino</button>
+              Aggiungi al carrellino</button>
             <button className='btn btn-primary me-2'>Preferiti</button>
           </div>
         </div>
