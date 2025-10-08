@@ -38,6 +38,13 @@ const DetailProductPage = () => {
 
   useEffect(fetchProduct, [slug])
 
+
+  const showMessage = (message, type) => {
+    setNotification({ message, type });
+    // Nasconde il messaggio dopo 3 secondi
+    setTimeout(() => setNotification({ message: '', type: '' }), 3000);
+  };
+
   const handleAddToCart = () => {
     // Controlliamo che il prodotto esista e che la quantità sia valida
     if (product.id && quantity > 0) {
