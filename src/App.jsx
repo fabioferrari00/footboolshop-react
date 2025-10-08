@@ -9,7 +9,6 @@ import CartPage from '../pages/CartPage'
 import { CartProvider } from './CartContext'
 import FavoritesPage from '../pages/FavoritesPage';
 import EditProduct from '../pages/EditProduct'
-import Checkout from '../pages/Checkout'
 
 
 function App() {
@@ -29,10 +28,19 @@ function App() {
               <Route path='/favorites' element={<FavoritesPage />} />
               <Route path='/checkout' element={<Checkout />} />
 
-            </Route>
-          </Routes>
-        </BrowserRouter>
-      </CartProvider>
+      <BrowserRouter>
+        <Routes>
+          <Route element={<DefaultLayout />}>
+            <Route path='/' element={<HomePage />} />
+            <Route path='/products' element={<ProductsPage />} />
+            <Route path='/product/:slug' element={<DetailProductPage />} />
+            <Route path='/products/:slug/edit' element={<EditProduct />} />
+            <Route path='/contacts' element={<ContactsPage />} />
+            <Route path='/about_us' element={<AboutUsPage />} />
+            <Route path='/favorites' element={<FavoritesPage />} />
+          </Route>
+        </Routes>
+      </BrowserRouter>
     </>
   )
 }
