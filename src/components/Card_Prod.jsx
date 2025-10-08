@@ -15,27 +15,27 @@ const Card_Prod = (product) => {
     <div className="col-12 col-md-6 col-lg-4  noDecoration" key={product.id} >
 
       <Link to={`/product/${product.slug}`} state={{ id: product.id }} >
-        <div className="card " >
+        <div className="card m-2" >
           <img src={product.image_url} className="card-img-top" alt="Product 1" />
           <div className="card-body">
             <h5 className="text-decoration-none card-title">{product.name}</h5>
             <p className="text-decoration-none card-text">{product.description}</p>
             <span>{product.price}€</span>
           </div>
-          <div className="card-footer text-end">
-            <span
-              className="heart-icon"
-              onClick={(e) => {
-                e.preventDefault();
-                toggleFavorite(Number(product.id));
-              }}
-            >
-              <FontAwesomeIcon
-                icon={favorites.includes(Number(product.id)) ? solidHeart : regularHeart}
-                className={favorites.includes(Number(product.id)) ? "liked" : ""}
-              />
-            </span>
-          </div>
+
+          <span
+            className="heart-icon"
+            onClick={(e) => {
+              e.preventDefault();
+              toggleFavorite(Number(product.id));
+            }}
+          >
+            <FontAwesomeIcon
+              icon={favorites.includes(Number(product.id)) ? solidHeart : regularHeart}
+              className={favorites.includes(Number(product.id)) ? "liked" : ""}
+            />
+          </span>
+
         </div>
       </Link>
     </div>
