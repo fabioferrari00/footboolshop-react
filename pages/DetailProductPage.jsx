@@ -4,7 +4,11 @@ import Consigliati from '../src/components/Consigliati';
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
+<<<<<<< HEAD
 import { useCart } from '../src/CartContext';
+=======
+import { Link } from 'react-router-dom';
+>>>>>>> cddf6b3732e8fa7fe76377859a7ee6336e8bf9fb
 
 
 
@@ -28,6 +32,7 @@ const DetailProductPage = () => {
   }
 
   useEffect(fetchProduct, [slug])
+<<<<<<< HEAD
 
   const handleAddToCart = () => {
         // Controlliamo che il prodotto esista e che la quantità sia valida
@@ -45,6 +50,8 @@ const DetailProductPage = () => {
             console.error('ERRORE: Tentativo di aggiungere un prodotto senza ID valido.');
         }
     } 
+=======
+>>>>>>> cddf6b3732e8fa7fe76377859a7ee6336e8bf9fb
 
 
   return (
@@ -55,7 +62,10 @@ const DetailProductPage = () => {
         </div>
         {/*dettagi prodotto*/}
         <div className="col-md-6">
-          <h1>{product.name}</h1>
+          <div className="d-flex">
+            <h1>{product.name}</h1>
+            <Link to={`/products/${slug}/edit`}><i className='fas fa-edit'></i></Link>
+          </div>
           <h2 className='text-success'>{`€ ${product.price}`}</h2>
           <p>{product.description}</p>
           <p>{`Squadra: ${product.team_name}`}</p>

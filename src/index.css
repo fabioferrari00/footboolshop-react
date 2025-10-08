@@ -11,8 +11,6 @@ footer {
     font-style: normal;
     font-size: 3rem;
     text-shadow: 3px 3px 1px rgba(0, 0, 0, 0.8);
-
-
 }
 
 .bold {
@@ -29,7 +27,6 @@ footer {
     align-items: center;
     text-decoration: none;
 }
-
 
 .social-icon.facebook {
     background-color: #3b5998;
@@ -143,7 +140,6 @@ footer {
     box-shadow: 0 6px 14px rgba(0, 0, 0, 0.4);
 }
 
-
 .product-image {
     width: 100%;
     max-width: 300px;
@@ -155,7 +151,9 @@ footer {
     border-radius: 10px;
 }
 
+
 /* Pagine prodotti */
+
 .section_team {
     font-family: "Grape Nuts", cursive;
     font-weight: 400;
@@ -163,9 +161,7 @@ footer {
     font-size: 2.5rem;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
     margin-bottom: 20px;
-
 }
-
 
 .title_section,
 .hero-section,
@@ -176,9 +172,7 @@ footer {
     font-size: 2.5rem;
     text-shadow: 2px 2px 6px rgba(0, 0, 0, 0.6);
     margin-bottom: 20px;
-
 }
-
 
 .card a {
     text-decoration: none;
@@ -205,3 +199,40 @@ footer {
     color: red !important;
 }
 
+<<<<<<< HEAD
+=======
+
+/* ------  H E A D E R */
+
+.titolo-colorato {
+    font-style: italic;
+    font-weight: 700;
+    text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.3);
+    letter-spacing: 1px;
+}
+
+.navbar-nav .nav-link {
+    color: #0d6efd;
+    font-weight: 500;
+    text-decoration: none;
+}
+
+.navbar-nav .nav-link:hover {
+    color: #084298;
+    text-shadow: 0 0 6px rgba(13, 110, 253, 0.4);
+}
+
+@media (max-width: 991.98px) {
+    #navbarNav {
+        position: absolute;
+        top: 100%;
+        left: 0;
+        right: 0;
+        background: white;
+        border: 1px solid rgba(0, 0, 0, .1);
+        text-align: center;
+        padding: 10px;
+        z-index: 1;
+    }
+}
+>>>>>>> cddf6b3732e8fa7fe76377859a7ee6336e8bf9fb

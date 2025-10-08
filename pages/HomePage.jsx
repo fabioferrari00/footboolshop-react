@@ -12,23 +12,35 @@ const HomePage = () => {
 
   const [products, setProducts] = useState([]);
   const [favorites, setFavorites] = useState([]);
-  
+
 
 
   const fetchProducts = () => {
     axios.get("http://localhost:3000/products").then((resp) => {
       setProducts(resp.data)
     })
+    
   }
- useEffect(fetchProducts, [])
+  useEffect(() => {
+    const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+    setFavorites(savedFavorites);
 
+    fetchProducts();
+  }, []);
+
+  useEffect(() => {
+  localStorage.setItem("favorites", JSON.stringify(favorites));
+}, [favorites])
+
+  
  const toggleFavorite = (productId) => {
     setFavorites((prev) =>
       prev.includes(productId)
-        ? prev.filter((id) => id !== productId)  
-        : [...prev, productId]                    
+        ? prev.filter((id) => id !== productId)
+        : [...prev, productId]
     );
   };
+  
 
 
   return (
@@ -45,7 +57,7 @@ const HomePage = () => {
               return (
                 <div className="col-12 col-md-6 col-lg-4 noDecoration" key={product.id}>
                   <div className="card position-relative">
-                   <span
+                    <span
                       className="heart-icon"
                       onClick={(e) => {
                         e.preventDefault();
@@ -57,22 +69,22 @@ const HomePage = () => {
                         className={favorites.includes(product.id) ? "liked" : ""}
                       />
                     </span>
-                    
 
-                  <Link to={`/product/${product.slug}`} state={{
-                    id: product.id
-                  }} >
-                 
+
+                    <Link to={`/product/${product.slug}`} state={{
+                      id: product.id
+                    }} >
+
                       <img src={product.image_url} className="card-img-top" alt="Product 1" />
 
                       <div className="card-body">
                         <h5 className="text-decoration-none card-title">{product.name}</h5>
                         <p className="text-decoration-none card-text">{product.description}</p>
                       </div>
-                    
-                  </Link>
+
+                    </Link>
+                  </div>
                 </div>
-              </div>
               )
           })
           }
@@ -85,39 +97,39 @@ const HomePage = () => {
             if (product.size == "XXS" || product.size == 36)
               return (
                 <div className="col-12 col-md-6 col-lg-4 noDecoration" key={product.id}>
-                   <div className="card position-relative">
-                      <span
-                        className="heart-icon"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          toggleFavorite(product.id);
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={favorites.includes(product.id) ? solidHeart : regularHeart}
-                          className={favorites.includes(product.id) ? "liked" : ""}
-                        />
-                      </span>
-                  <Link to={`/product/${product.slug}`} state={{
-                    id: product.id
-                  }} >      
-                    <div className="card " >
-                      <img src={product.image_url} className="card-img-top" alt="Product 1" />
+                  <div className="card position-relative">
+                    <span
+                      className="heart-icon"
+                      onClick={(e) => {
+                        e.preventDefault();
+                        toggleFavorite(product.id);
+                      }}
+                    >
+                      <FontAwesomeIcon
+                        icon={favorites.includes(product.id) ? solidHeart : regularHeart}
+                        className={favorites.includes(product.id) ? "liked" : ""}
+                      />
+                    </span>
+                    <Link to={`/product/${product.slug}`} state={{
+                      id: product.id
+                    }} >
+                      <div className="card " >
+                        <img src={product.image_url} className="card-img-top" alt="Product 1" />
 
-                      <div className="card-body">
-                        <h5 className="text-decoration-none card-title">{product.name}</h5>
-                        <p className="text-decoration-none card-text">{product.description}</p>
+                        <div className="card-body">
+                          <h5 className="text-decoration-none card-title">{product.name}</h5>
+                          <p className="text-decoration-none card-text">{product.description}</p>
+                        </div>
                       </div>
-                    </div>
-                  </Link>
-                </div>
+                    </Link>
+                  </div>
                 </div>
               )
           })
           }
         </div>
       </div>
-      
+
     </>
   )
 }
