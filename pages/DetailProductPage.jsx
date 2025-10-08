@@ -21,6 +21,8 @@ const DetailProductPage = () => {
   const [quantity, setQuantity] = useState(1);
   const { favorites, toggleFavorite } = useFavorites();
 
+  const [copySuccessMessage, setCopySuccessMessage] = useState('')
+
 
 
   //recupero slug
@@ -53,13 +55,14 @@ const DetailProductPage = () => {
       // L'oggetto product contiene già tutti i dati necessari (id, name, price, ecc.)
       addItem(product, quantity);
       console.log('Chiamata addItem terminata. Lo stato del carrello DEVE essere aggiornato.')
-      alert(`${product.name} (x${quantity}) aggiunto al carrello!`);
       // Opzionale: azzerare la quantità
       setQuantity(1);
     } else {
       // Se entri qui, significa che product.id è nullo o quantity è zero
       console.error('ERRORE: Tentativo di aggiungere un prodotto senza ID valido.');
     }
+    setCopySuccessMessage('Articolo aggiunto al carrello!');
+    setTimeout(() => setCopySuccessMessage(''), 3000);
   }
 
 
@@ -94,7 +97,7 @@ const DetailProductPage = () => {
               className="form-control d-inline-block w-auto me-2"
             />
             <button
-              className='btn btn-primary me-2'
+              className='btn rounded-5 px-3 py-1 btn-success me-2'
               onClick={handleAddToCart} // <-- Collegamento della funzione al click
               disabled={!product.id} // Disabilita se i dati del prodotto non sono ancora caricati
             >
@@ -117,6 +120,7 @@ const DetailProductPage = () => {
               />
               Preferiti
             </button>
+            {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
           </div>
         </div>
       </div>
