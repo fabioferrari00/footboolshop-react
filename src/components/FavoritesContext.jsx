@@ -1,38 +1,34 @@
-import React, { createContext, useState, useEffect, useContext } from 'react';
+// src/context/FavoritesContext.jsx
+import { createContext, useState, useContext, useEffect } from "react";
 
-// 1. Creo il contesto
 const FavoritesContext = createContext();
 
-// 2. Creo il provider
 export const FavoritesProvider = ({ children }) => {
-  const [favorites, setFavorites] = useState([]);
+  // 1) Leggi dal localStorage SUBITO (lazy initializer) per evitare il "lampeggio"
+  const [favorites, setFavorites] = useState(() => {
+    try {
+      const saved = localStorage.getItem("favorites");
+      return saved ? JSON.parse(saved) : [];
+    } catch {
+      return [];
+    }
+  });
 
-  // Carico i preferiti da localStorage all'avvio
+  // 2) Scrivi ogni volta che cambia
   useEffect(() => {
-    const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(savedFavorites);
-  }, []);
-
-  // Aggiorno localStorage ogni volta che i preferiti cambiano
-  useEffect(() => {
-    
     localStorage.setItem("favorites", JSON.stringify(favorites));
   }, [favorites]);
 
+  // 3) Normalizza gli ID per coerenza (tienili tutti Number)
   const toggleFavorite = (productId) => {
+    const id = Number(productId);
     setFavorites((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
+      prev.includes(id) ? prev.filter((x) => x !== id) : [...prev, id]
     );
   };
 
-  const isFavorite = (productId) => {
-    return favorites.includes(productId);
-  };
-
   return (
-    <FavoritesContext.Provider value={{ favorites, toggleFavorite, isFavorite }}>
+    <FavoritesContext.Provider value={{ favorites, toggleFavorite }}>
       {children}
     </FavoritesContext.Provider>
   );

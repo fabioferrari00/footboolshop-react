@@ -6,14 +6,13 @@ import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
+import { useFavorites } from "../src/components/FavoritesContext";
 
 
 const HomePage = () => {
 
   const [products, setProducts] = useState([]);
-  const [favorites, setFavorites] = useState([]);
-
-
+  const { favorites, toggleFavorite } = useFavorites();
 
   const fetchProducts = () => {
     axios.get("http://localhost:3000/products").then((resp) => {
@@ -22,24 +21,9 @@ const HomePage = () => {
 
   }
   useEffect(() => {
-    const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-    setFavorites(savedFavorites);
-
     fetchProducts();
   }, []);
 
-  useEffect(() => {
-    localStorage.setItem("favorites", JSON.stringify(favorites));
-  }, [favorites])
-
-
-  const toggleFavorite = (productId) => {
-    setFavorites((prev) =>
-      prev.includes(productId)
-        ? prev.filter((id) => id !== productId)
-        : [...prev, productId]
-    );
-  };
 
   return (
     <>
@@ -59,14 +43,15 @@ const HomePage = () => {
                       className="heart-icon"
                       onClick={(e) => {
                         e.preventDefault();
-                        toggleFavorite(product.id);
+                        toggleFavorite(Number(product.id));
                       }}
                     >
                       <FontAwesomeIcon
-                        icon={favorites.includes(product.id) ? solidHeart : regularHeart}
-                        className={favorites.includes(product.id) ? "liked" : ""}
+                        icon={favorites.includes(Number(product.id)) ? solidHeart : regularHeart}
+                        className={favorites.includes(Number(product.id)) ? "liked" : ""}
                       />
                     </span>
+
 
 
                     <Link to={`/product/${product.slug}`} state={{
