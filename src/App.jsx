@@ -6,24 +6,29 @@ import ProductsPage from '../pages/ProductsPage'
 import ContactsPage from '../pages/ContactsPage'
 import AboutUsPage from '../pages/AboutUsPage'
 import FavoritesPage from '../pages/FavoritesPage';
+import EditProduct from '../pages/EditProduct'
+import LoadingContext from './context/LoadingContext'
+import { useState } from 'react';
 
 function App() {
+  const [isLoading, setIsLoading] = useState(true)
   return (
     <>
-
-      <BrowserRouter>
-        <Routes>
-          <Route element={<DefaultLayout />}>
-            <Route path='/' element={<HomePage />} />
-            <Route path='/products' element={<ProductsPage />} />
-            <Route path='/product/:slug' element={<DetailProductPage />} />
-            <Route path='/products/:slug/edit' element={<EditProduct />} />
-            <Route path='/contacts' element={<ContactsPage />} />
-            <Route path='/about_us' element={<AboutUsPage />} />
-            <Route path='/favorites' element={<FavoritesPage />} /> 
-          </Route>
-        </Routes>
-      </BrowserRouter>
+      <LoadingContext.Provider value={{ isLoading, setIsLoading }}>
+        <BrowserRouter>
+          <Routes>
+            <Route element={<DefaultLayout />}>
+              <Route path='/' element={<HomePage />} />
+              <Route path='/products' element={<ProductsPage />} />
+              <Route path='/product/:slug' element={<DetailProductPage />} />
+              <Route path='/products/:slug/edit' element={<EditProduct />} />
+              <Route path='/contacts' element={<ContactsPage />} />
+              <Route path='/about_us' element={<AboutUsPage />} />
+              <Route path='/favorites' element={<FavoritesPage />} />
+            </Route>
+          </Routes>
+        </BrowserRouter>
+      </LoadingContext.Provider>
     </>
   )
 }

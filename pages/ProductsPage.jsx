@@ -2,18 +2,73 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { useMemo } from 'react';
+import { useContext } from 'react';
+import LoadingContext from '../src/context/LoadingContext';
 
 const ProductsPage = () => {
 
+  const { setIsLoading } = useContext(LoadingContext);
   const [products, setProducts] = useState([]);
+  const [filters, setFilters] = useState({
+    name: '',
+    size: '',
+    team_name: '',
+  });
+  const [uniqueTeams, setUniqueTeams] = useState([]);
+  const [uniqueSizes, setUniqueSizes] = useState([]);
+
 
   const fetchProducts = () => {
+    setIsLoading(true);
     axios.get("http://localhost:3000/products").then((resp) => {
-      setProducts(resp.data)
+      setProducts(resp.data);
+      setIsLoading(false)
+    }).catch((err) => {
+      console.error(err);
     })
-  }
 
-  useEffect(fetchProducts, [])
+  }
+  useEffect(fetchProducts, []);
+
+
+  useEffect(() => {
+    const teams = [...new Set(products.map(p => p.team_name))].sort();
+    const sizes = [...new Set(products.map(p => p.size))].sort((a, b) => {
+      const order = { 'S': 1, 'M': 2, 'L': 3, 'XL': 4, 'XXL': 5, 'Unica': 6 };
+      return (order[a] || 99) - (order[b] || 99);
+    });
+    setUniqueTeams(teams);
+    setUniqueSizes(sizes);
+  }, [products]);
+
+  const handleFilterChange = (event) => {
+    const { name, value } = event.target;
+    setFilters(prevFilters => ({
+      ...prevFilters,
+      [name]: value,
+    }));
+  };
+
+
+
+  const filteredProducts = useMemo(() => {
+    const { name, size, team_name } = filters;
+
+    return products.filter(product => {
+      // Filtro per Nome Prodotto (case insensitive)
+      const nameMatch = product.name.toLowerCase().includes(name.toLowerCase());
+
+      // Filtro per Taglia
+      const sizeMatch = !size || product.size === size;
+
+      // Filtro per Team
+      const teamMatch = !team_name || product.team_name === team_name;
+
+      return nameMatch && sizeMatch && teamMatch;
+    });
+  }, [filters]); // Ricalcola solo quando i filtri cambiano
+
 
   return (
     <div className="container">
@@ -21,14 +76,67 @@ const ProductsPage = () => {
         <div className="col-12 d-flex justify-content-center my-4">
           <h1 className='title' >Un ampio catalogo a tua Disposizione!</h1>
         </div>
-
       </div>
-      <div className="row gy-3 my-4">
-        <h2 className='section_team' >Inter</h2>
-        {products.map((product) => {
-          if (product.team_name == "Inter")
+      <div className="row">
+        <div className="col-12 col-md-6 col-lg-4">
+          <div className='d-flex flex-col gap-4 mb-4'>
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Nome Prodotto</label>
+              <div className="relative">
+                <input
+                  type="text"
+                  name="name"
+                  id="name"
+                  value={filters.name}
+                  onChange={handleFilterChange}
+                  placeholder="Cerca per nome..."
+                  className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 transition duration-150"
+                />
+
+              </div>
+            </div>
+            {/* Filtro per Team */}
+            <div>
+              <label htmlFor="team" className="block text-sm font-medium text-gray-700 mb-1">Team</label>
+              <select
+                name="team_name"
+                id="team_name"
+                value={filters.team_name}
+                onChange={handleFilterChange}
+                className="w-full pl-3 pr-10 py-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 appearance-none cursor-pointer transition duration-150"
+              >
+                <option value="">Tutti i Team</option>
+                {uniqueTeams.map(team_name => (
+                  <option key={team_name} value={team_name}>{team_name}</option>
+                ))}
+              </select>
+            </div>
+
+            {/* Filtro per Taglia */}
+            <div>
+              <label htmlFor="size" className="block text-sm font-medium text-gray-700 mb-1">Taglia</label>
+              <select
+                name="size"
+                id="size"
+                value={filters.size}
+                onChange={handleFilterChange}
+                className="w-full pl-3 pr-10 py-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 appearance-none cursor-pointer transition duration-150"
+              >
+                <option value="">Tutte le Taglie</option>
+                {uniqueSizes.map(size => (
+                  <option key={size} value={size}>{size}</option>
+                ))}
+              </select>
+            </div>
+          </div>
+        </div>
+      </div>
+      <div className="row my-4">
+
+        {filteredProducts.length > 0 ? (
+          filteredProducts.map(product => {
             return (
-              <div className="col-12 col-md-6 col-lg-4  noDecoration" >
+              <div className="col-12 col-md-6 col-lg-4  noDecoration" key={product.id} >
                 <Link to={`/product/${product.slug}`} state={{
                   id: product.id
                 }} >
@@ -43,120 +151,22 @@ const ProductsPage = () => {
                 </Link>
               </div>
             )
-        })}
+          })
+        ) : (
+          <div className="text-center p-12 bg-white rounded-xl shadow-lg border-2 border-dashed border-gray-200">
+            <p className="text-xl text-gray-600 font-semibold">Nessun articolo trovato.</p>
+            <p className="text-sm text-gray-500 mt-2">Prova a modificare i filtri di ricerca.</p>
+          </div>
+        )
+        }
       </div>
-      <div className="row gy-3  my-4">
-        <h2 className='section_team' >Milan</h2>
-        {products.map((product) => {
-          if (product.team_name == "Milan")
-            return (
-              <div className="col-12 col-md-6 col-lg-4  noDecoration" >
-                <Link to={`/product/${product.slug}`} state={{
-                  id: product.id
-                }} >
-                  <div className="card " >
-                    <img src={product.image_url} className="card-img-top" alt="Product 1" />
+    </div >
 
-                    <div className="card-body">
-                      <h5 className="text-decoration-none card-title">{product.name}</h5>
-                      <p className="text-decoration-none card-text">{product.description}</p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            )
-        })}
-      </div>
-      <div className="row gy-3 my-4">
-        <h2 className='section_team' >Roma</h2>
-        {products.map((product) => {
-          if (product.team_name == "Roma")
-            return (
-              <div className="col-12 col-md-6 col-lg-4  noDecoration" >
-                <Link to={`/product/${product.slug}`} state={{
-                  id: product.id
-                }} >
-                  <div className="card " >
-                    <img src={product.image_url} className="card-img-top" alt="Product 1" />
-
-                    <div className="card-body">
-                      <h5 className="text-decoration-none card-title">{product.name}</h5>
-                      <p className="text-decoration-none card-text">{product.description}</p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            )
-        })}
-      </div>
-      <div className="row gy-3 my-4">
-        <h2 className='section_team' >Cagliari</h2>
-        {products.map((product) => {
-          if (product.team_name == "Cagliari")
-            return (
-              <div className="col-12 col-md-6 col-lg-4 noDecoration" >
-                <Link to={`/product/${product.slug}`} state={{
-                  id: product.id
-                }} >
-                  <div className="card " >
-                    <img src={product.image_url} className="card-img-top" alt="Product 1" />
-
-                    <div className="card-body">
-                      <h5 className="text-decoration-none card-title">{product.name}</h5>
-                      <p className="text-decoration-none card-text">{product.description}</p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            )
-        })}
-      </div>
-      <div className="row gy-3 my-4">
-        <h2 className='section_team' >Juventus</h2>
-        {products.map((product) => {
-          if (product.team_name == "Juventus")
-            return (
-              <div className="col-12 col-md-6 col-lg-4 noDecoration " >
-                <Link to={`/product/${product.slug}`} state={{
-                  id: product.id
-                }} >
-                  <div className="card " >
-                    <img src={product.image_url} className="card-img-top" alt="Product 1" />
-
-                    <div className="card-body">
-                      <h5 className="text-decoration-none card-title">{product.name}</h5>
-                      <p className="text-decoration-none card-text">{product.description}</p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            )
-        })}
-      </div>
-      <div className="row gy-3 my-4">
-        <h2 className='section_team'>Napoli</h2>
-        {products.map((product) => {
-          if (product.team_name == "Napoli")
-            return (
-              <div className="col-12 col-md-6 col-lg-4 noDecoration" >
-                <Link to={`/product/${product.slug}`} state={{
-                  id: product.id
-                }} >
-                  <div className="card " >
-                    <img src={product.image_url} className="card-img-top" alt="Product 1" />
-
-                    <div className="card-body">
-                      <h5 className="text-decoration-none card-title">{product.name}</h5>
-                      <p className="text-decoration-none card-text">{product.description}</p>
-                    </div>
-                  </div>
-                </Link>
-              </div>
-            )
-        })}
-      </div>
-    </div>
   )
 }
 
 export default ProductsPage
+
+
+
+
