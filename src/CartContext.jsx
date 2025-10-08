@@ -20,14 +20,14 @@ export const useCart = () => {
 // Questa funzione calcola i totali ogni volta che il carrello cambia
 const calculateTotals = (items) => {
   const SHIPPING_COST = 8.00;
-  const FREE_SHIPPING_THRESHOLD = 50.00; 
+  const FREE_SHIPPING_THRESHOLD = 50.00;
 
   // Calcola il Subtotale totale (Prezzo * Quantità per ogni articolo)
   const subtotal = items.reduce((total, item) => total + (item.price * item.quantity), 0);
-  
+
   // Calcola le Spese di Spedizione (gratis sopra la soglia)
   const shipping = subtotal >= FREE_SHIPPING_THRESHOLD ? 0 : SHIPPING_COST;
-  
+
   const total = subtotal + shipping;
 
   return { subtotal, shipping, total };
@@ -37,57 +37,57 @@ const calculateTotals = (items) => {
 // 3. IL PROVIDER (GESTORE DELLO STATO)
 
 export const CartProvider = ({ children }) => {
-   // Funzione per leggere lo stato iniziale dal localStorage
- const getInitialCartItems = () => {
-  const storedItems = localStorage.getItem(LOCAL_STORAGE_KEY);
-  // Se ci sono articoli salvati, li parsifica e li usa, altrimenti inizia con un array vuoto
-  return storedItems ? JSON.parse(storedItems) : [];
- };
+  // Funzione per leggere lo stato iniziale dal localStorage
+  const getInitialCartItems = () => {
+    const storedItems = localStorage.getItem(LOCAL_STORAGE_KEY);
+    // Se ci sono articoli salvati, li parsifica e li usa, altrimenti inizia con un array vuoto
+    return storedItems ? JSON.parse(storedItems) : [];
+  };
 
- // Stato principale del carrello - INIZIALIZZATO CON LA FUNZIONE CHE LEGGE IL LOCAL STORAGE
- const [cartItems, setCartItems] = useState(getInitialCartItems);
+  // Stato principale del carrello - INIZIALIZZATO CON LA FUNZIONE CHE LEGGE IL LOCAL STORAGE
+  const [cartItems, setCartItems] = useState(getInitialCartItems);
 
- // EFFETTO: Ogni volta che cartItems cambia, salva il nuovo stato nel localStorage
- useEffect(() => {
- localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cartItems));
- console.log("Carrello salvato in localStorage:", cartItems);
- }, [cartItems]); // Si attiva ogni volta che cartItems viene aggiornato
+  // EFFETTO: Ogni volta che cartItems cambia, salva il nuovo stato nel localStorage
+  useEffect(() => {
+    localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cartItems));
+    console.log("Carrello salvato in localStorage:", cartItems);
+  }, [cartItems]); // Si attiva ogni volta che cartItems viene aggiornato
 
   // --- FUNZIONI DI MANIPOLAZIONE DELLO STATO ---
 
   // Funzione per Aggiungere o Aggiornare un articolo
   const addItem = (product, quantity = 1) => {
     // 1. CONVERSIONI FUORI dallo setter (più pulito)
-    const numericPrice = parseFloat(product.price); 
+    const numericPrice = parseFloat(product.price);
     const numericQuantity = parseInt(quantity);
-    
+
     // Usciamo immediatamente se i dati non sono validi.
     if (numericQuantity <= 0 || isNaN(numericPrice)) return;
-    
-    setCartItems(prevItems => {
-        // 2. USO '==' OVUNQUE per ignorare la differenza tra stringa e numero nell'ID
-        const existingItem = prevItems.find(item => item.id == product.id); 
 
-        if (existingItem) {
-            // Se esiste, aggiorno la quantità
-            return prevItems.map(item =>
-                item.id == product.id 
-                    ? { ...item, quantity: item.quantity + numericQuantity }
-                    : item
-            );
-        } else {
-            // Se non esiste, aggiungo un nuovo articolo (con prezzo e quantità come numeri)
-            return [
-                ...prevItems, 
-                { 
-                    ...product,
-                    price: numericPrice, // Prezzo salvato come NUMERO
-                    quantity: numericQuantity // Quantità salvata come NUMERO
-                }
-            ];
-        }
+    setCartItems(prevItems => {
+      // 2. USO '==' OVUNQUE per ignorare la differenza tra stringa e numero nell'ID
+      const existingItem = prevItems.find(item => item.id == product.id);
+
+      if (existingItem) {
+        // Se esiste, aggiorno la quantità
+        return prevItems.map(item =>
+          item.id == product.id
+            ? { ...item, quantity: item.quantity + numericQuantity }
+            : item
+        );
+      } else {
+        // Se non esiste, aggiungo un nuovo articolo (con prezzo e quantità come numeri)
+        return [
+          ...prevItems,
+          {
+            ...product,
+            price: numericPrice, // Prezzo salvato come NUMERO
+            quantity: numericQuantity // Quantità salvata come NUMERO
+          }
+        ];
+      }
     });
-};
+  };
 
   // Funzione per Rimuovere completamente un articolo (ad esempio, tramite un bottone 'X')
   const removeItem = (productId) => {
@@ -96,7 +96,7 @@ export const CartProvider = ({ children }) => {
       prevItems.filter(item => item.id != productId)
     );
   };
-  
+
   // Funzione per Aggiornare la quantità (usata da bottoni '+' o '-')
   const updateQuantity = (productId, newQuantity) => {
     // Se la quantità arriva a zero o meno, rimuovo l'articolo
@@ -104,7 +104,7 @@ export const CartProvider = ({ children }) => {
       removeItem(productId);
       return;
     }
-    
+
     setCartItems(prevItems =>
       prevItems.map(item =>
         item.id == productId
@@ -124,8 +124,8 @@ export const CartProvider = ({ children }) => {
     ...totals,
     // Funzioni
     addItem,
-    removeItem, 
-    updateQuantity, 
+    removeItem,
+    updateQuantity,
     // Qui si possono aggiungere altre funzioni come 'clearCart'
   };
 

@@ -68,8 +68,8 @@ const DetailProductPage = () => {
 
           <div className='mt-4'>
 
-  
-            
+
+
 
             <input
               type="number"
