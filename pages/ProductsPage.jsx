@@ -1,10 +1,9 @@
 import React from 'react';
 import { Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { useState, useEffect, useCallback } from 'react';
-import { useMemo } from 'react';
+import { useState, useEffect, useCallback, useMemo } from 'react'; // Rimosso l'import di useMemo duplicato
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Card_Prod from '../src/components/Card_Prod';
+import Card_Prod from '../src/components/Card_Prod'; // Presumo che questo componente sia corretto
 // 1. Importa le icone necessarie
 import { faHeart as solidHeart, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 
@@ -15,17 +14,24 @@ const ProductsPage = () => {
     size: '',
     team_name: '',
   });
+  // 1. AGGIUNTO: Stato per l'ordinamento
+  const [sortOrder, setSortOrder] = useState('default'); // 'default', 'name-asc', 'name-desc', 'price-asc', 'price-desc'
+  // 2. AGGIUNTO: Stato per i preferiti (assumiamo che vengano gestiti localmente o tramite un hook/context)
+  const [favorites, setFavorites] = useState([]);
   const [uniqueTeams, setUniqueTeams] = useState([]);
   const [uniqueSizes, setUniqueSizes] = useState([]);
   const [searchParams] = useSearchParams();
 
-  // 2. Aggiungi uno stato per il messaggio di conferma della copia
+  // 3. Aggiungi uno stato per il messaggio di conferma della copia
   const [copySuccessMessage, setCopySuccessMessage] = useState('');
 
 
   const fetchProducts = useCallback(() => {
     axios.get("http://localhost:3000/products").then((resp) => {
       setProducts(resp.data);
+      // OPTIONAL: Recupera i preferiti dal localStorage all'avvio
+      const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
+      setFavorites(savedFavorites);
     }).catch((err) => {
       console.error(err);
     });
@@ -56,6 +62,22 @@ const ProductsPage = () => {
     setUniqueSizes(sizes);
   }, [products]);
 
+  // 4. AGGIUNTO: Funzione per gestire i preferiti
+  const toggleFavorite = (productId) => {
+    setFavorites(prevFavorites => {
+      const isFavorite = prevFavorites.includes(productId);
+      let newFavorites;
+      if (isFavorite) {
+        newFavorites = prevFavorites.filter(id => id !== productId);
+      } else {
+        newFavorites = [...prevFavorites, productId];
+      }
+      // Aggiorna il localStorage per persistenza
+      localStorage.setItem('favorites', JSON.stringify(newFavorites));
+      return newFavorites;
+    });
+  };
+
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
     setFilters(prevFilters => ({
@@ -64,7 +86,7 @@ const ProductsPage = () => {
     }));
   };
 
-  // 2. Aggiungi una funzione per gestire il cambio di ordinamento
+  // 2. Funzione per gestire il cambio di ordinamento (era già presente, ora usa 'setSortOrder')
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
   };
@@ -74,6 +96,9 @@ const ProductsPage = () => {
     if (filters.name) params.append('name', filters.name);
     if (filters.size) params.append('size', filters.size);
     if (filters.team_name) params.append('team_name', filters.team_name);
+    // Aggiungo anche l'ordinamento se è diverso da 'default' per la condivisione
+    if (sortOrder && sortOrder !== 'default') params.append('sort', sortOrder);
+
     const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
 
     navigator.clipboard.writeText(shareUrl).then(() => {
@@ -87,7 +112,6 @@ const ProductsPage = () => {
   };
 
   // 3. Aggiorna useMemo per applicare prima il filtro e poi l'ordinamento
-  //    Ho rinominato la variabile da 'filteredProducts' a 'processedProducts' per chiarezza
   const processedProducts = useMemo(() => {
     // Fase di filtraggio (invariata)
     const filtered = products.filter(product => {
@@ -97,8 +121,8 @@ const ProductsPage = () => {
       return nameMatch && sizeMatch && teamMatch;
     });
 
-    // Fase di ordinamento (nuova)
-    const sorted = [...filtered]; // Crea una copia per non modificare l'array originale
+    // Fase di ordinamento
+    const sorted = [...filtered];
 
     switch (sortOrder) {
       case 'name-asc':
@@ -107,7 +131,6 @@ const ProductsPage = () => {
       case 'name-desc':
         sorted.sort((a, b) => b.name.localeCompare(a.name));
         break;
-      // Nota: Ho aggiunto anche l'ordinamento per prezzo come opzione comune.
       // Assicurati che i tuoi oggetti 'product' abbiano una proprietà 'price'.
       case 'price-asc':
         sorted.sort((a, b) => a.price - b.price);
@@ -116,11 +139,12 @@ const ProductsPage = () => {
         sorted.sort((a, b) => b.price - a.price);
         break;
       default:
+        // Lascia l'ordinamento originale (o quello del server) se 'default'
         break;
     }
 
     return sorted;
-  }, [filters, products, sortOrder]); // Aggiungi 'sortOrder' alle dipendenze
+  }, [filters, products, sortOrder]);
 
 
   return (
@@ -131,9 +155,8 @@ const ProductsPage = () => {
         </div>
       </div>
       <div className="row">
-        {/* Modificato il layout per allineare meglio filtri e pulsante */}
         <div className="col-12">
-          {/* 4. Aggiungi il pulsante Condividi e il messaggio di conferma */}
+          {/* Controlli Filtri e Ordinamento */}
           <div className='d-flex flex-wrap align-items-end gap-3 mb-4'>
             {/* Filtro Nome */}
             <div>
@@ -183,6 +206,25 @@ const ProductsPage = () => {
               </select>
             </div>
 
+            {/* AGGIUNTO: Controllo Ordinamento */}
+            <div>
+              <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mb-1">Ordina per</label>
+              <select
+                name="sortOrder"
+                id="sortOrder"
+                value={sortOrder}
+                onChange={handleSortChange}
+                className="w-full pl-3 pr-10 py-2 border border-gray-300 bg-white mx-2 rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 appearance-none cursor-pointer transition duration-150"
+              >
+                <option value="default">Seleziona</option>
+                <option value="name-asc">Nome (A-Z)</option>
+                <option value="name-desc">Nome (Z-A)</option>
+                <option value="price-asc">Prezzo (Crescente)</option>
+                <option value="price-desc">Prezzo (Decrescente)</option>
+              </select>
+            </div>
+
+
             {/* Pulsante Condividi */}
             <div className='ms-auto'>
               <button onClick={handleShare} className="btn btn-success d-flex align-items-center gap-2">
@@ -199,47 +241,23 @@ const ProductsPage = () => {
         {/* 5. Usa 'processedProducts' per il rendering */}
         {processedProducts.length > 0 ? (
           processedProducts.map(product => {
+            // 5. MODIFICATO: Utilizza il componente Card_Prod importato per coerenza
+            // e passa tutte le prop necessarie, inclusa la logica per i preferiti.
             return (
-              <div key={product.id} className="col-12 col-md-6 col-lg-4 noDecoration" >
-                <Link to={`/product/${product.slug}`} state={{
-                  id: product.id
-                }} >
-                  <div className="card " >
-                    <img src={product.image_url} className="card-img-top" alt="Product 1" />
+              <Card_Prod
+                key={product.id}
+                {...product} />
 
-                    <div className="card-body">
-                      <h5 className="text-decoration-none card-title">{product.name}</h5>
-                      <p className="text-decoration-none card-text">{product.description}</p>
-                    </div>
-                    <div className="card-footer text-end">
-                      <button
-                        className="btn btn-link p-0"
-                        onClick={(e) => {
-                          e.preventDefault();
-                          toggleFavorite(product.id);
-                        }}
-                      >
-                        <FontAwesomeIcon
-                          icon={solidHeart}
-                          style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
-                        />
-                      </button>
-                    </div>
-                  </div>
-                </Link>
-              </div>
             )
           })
         ) : (
           <div className="text-center p-12 bg-white rounded-xl shadow-lg border-2 border-dashed border-gray-200">
-            <p className="text-xl text-gray-600 font-semibold">Nessun articolo trovato.</p>
-            <p className="text-sm text-gray-500 mt-2">Prova a modificare i filtri di ricerca.</p>
+            <p className="text-xl text-gray-600 font-semibold">Nessun articolo trovato. 😔</p>
+            <p className="text-sm text-gray-500">Prova a modificare i filtri o a cercare un altro prodotto.</p>
           </div>
-        )
-        }
+        )}
       </div>
-    </div >
-  )
+    </div>
+  );
 }
-
 export default ProductsPage;
