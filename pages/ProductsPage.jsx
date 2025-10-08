@@ -4,6 +4,7 @@ import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
 import { useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import Card_Prod from '../src/components/Card_Prod';
 // 1. Importa le icone necessarie
 import { faHeart as solidHeart, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 
@@ -174,24 +175,7 @@ const ProductsPage = () => {
         {filteredProducts.length > 0 ? (
           filteredProducts.map(product => {
             return (
-              <div className="col-12 col-md-6 col-lg-4  noDecoration" key={product.id} >
-                <Link to={`/product/${product.slug}`} state={{ id: product.id }} >
-                  <div className="card " >
-                    <img src={product.image_url} className="card-img-top" alt="Product 1" />
-                    <div className="card-body">
-                      <h5 className="text-decoration-none card-title">{product.name}</h5>
-                      <p className="text-decoration-none card-text">{product.description}</p>
-                      <span>{product.price}€</span>
-                    </div>
-                    <div className="card-footer text-end">
-                      <button className="btn btn-link p-0" onClick={(e) => { e.preventDefault(); }}>
-                        <FontAwesomeIcon icon={solidHeart} />
-
-                      </button>
-                    </div>
-                  </div>
-                </Link>
-              </div>
+              <Card_Prod key={product.id} {...product} />
             )
           })
         ) : (
