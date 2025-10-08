@@ -3,12 +3,12 @@ import { Link } from 'react-router-dom'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { useMemo } from 'react';
-import { useContext } from 'react';
-import LoadingContext from '../src/context/LoadingContext';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 
 const ProductsPage = () => {
 
-  const { setIsLoading } = useContext(LoadingContext);
+
   const [products, setProducts] = useState([]);
   const [filters, setFilters] = useState({
     name: '',
@@ -20,10 +20,10 @@ const ProductsPage = () => {
 
 
   const fetchProducts = () => {
-    setIsLoading(true);
+
     axios.get("http://localhost:3000/products").then((resp) => {
       setProducts(resp.data);
-      setIsLoading(false)
+
     }).catch((err) => {
       console.error(err);
     })
@@ -151,20 +151,22 @@ const ProductsPage = () => {
                       <button
                         className="btn btn-link p-0"
                         onClick={(e) => {
-                          e.preventDefault(); 
+                          e.preventDefault();
                           toggleFavorite(product.id);
                         }}
                       >
                         <FontAwesomeIcon
                           icon={solidHeart}
-                          style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
+
+
+                        // style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
                         />
                       </button>
                     </div>
                   </div>
                 </Link>
               </div>
-              
+
             )
           })
         ) : (
