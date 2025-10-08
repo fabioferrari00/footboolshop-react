@@ -1,3 +1,4 @@
+
 import DefaultLayout from './layouts/DefaultLayout'
 import { BrowserRouter, Routes, Route } from 'react-router-dom'
 import HomePage from '../pages/HomePage'
@@ -9,12 +10,14 @@ import CartPage from '../pages/CartPage'
 import { CartProvider } from './CartContext'
 import FavoritesPage from '../pages/FavoritesPage';
 import EditProduct from '../pages/EditProduct'
-import Checkout from '../pages/Checkout'
+
+import { FavoritesProvider } from './components/FavoritesContext'; 
 
 function App() {
   return (
     <>
       <CartProvider>
+        <FavoritesProvider>
         <BrowserRouter>
           <Routes>
             <Route element={<DefaultLayout />}>
@@ -31,6 +34,7 @@ function App() {
             </Route>
           </Routes>
         </BrowserRouter>
+        </FavoritesProvider>
       </CartProvider>
 
     </>

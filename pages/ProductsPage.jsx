@@ -5,6 +5,7 @@ import { useState, useEffect, useCallback } from 'react';
 import { useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Card_Prod from '../src/components/Card_Prod';
+// 1. Importa le icone necessarie
 import { faHeart as solidHeart, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 const ProductsPage = () => {
@@ -14,13 +15,11 @@ const ProductsPage = () => {
     size: '',
     team_name: '',
   });
-
-  // 1. Aggiungi uno stato per l'ordinamento
-  const [sortOrder, setSortOrder] = useState('name-asc'); // Valore di default: Nome A-Z
-
   const [uniqueTeams, setUniqueTeams] = useState([]);
   const [uniqueSizes, setUniqueSizes] = useState([]);
   const [searchParams] = useSearchParams();
+
+  // 2. Aggiungi uno stato per il messaggio di conferma della copia
   const [copySuccessMessage, setCopySuccessMessage] = useState('');
 
 
@@ -132,11 +131,13 @@ const ProductsPage = () => {
         </div>
       </div>
       <div className="row">
+        {/* Modificato il layout per allineare meglio filtri e pulsante */}
         <div className="col-12">
-          <div className='d-flex flex-wrap justify-content-center gap-3 mb-4'>
+          {/* 4. Aggiungi il pulsante Condividi e il messaggio di conferma */}
+          <div className='d-flex flex-wrap align-items-end gap-3 mb-4'>
             {/* Filtro Nome */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1 mx-2">Nome Prodotto</label>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Nome Prodotto</label>
               <input
                 type="text"
                 name="name"
@@ -150,7 +151,7 @@ const ProductsPage = () => {
 
             {/* Filtro Team */}
             <div>
-              <label htmlFor="team_name" className="block text-sm font-medium text-gray-700 mb-1 mx-2">Team</label>
+              <label htmlFor="team_name" className="block text-sm font-medium text-gray-700 mb-1">Team</label>
               <select
                 name="team_name"
                 id="team_name"
@@ -182,43 +183,51 @@ const ProductsPage = () => {
               </select>
             </div>
 
-            {/* 4. Aggiungi il selettore per l'ordinamento */}
-            <div>
-              <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mb-1 mx-2">Ordina per</label>
-              <select
-                name="sortOrder"
-                id="sortOrder"
-                value={sortOrder}
-                onChange={handleSortChange}
-                className="w-full pl-3 pr-10 py-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 appearance-none cursor-pointer transition duration-150"
-              >
-                <option value="name-asc">Nome (A-Z)</option>
-                <option value="name-desc">Nome (Z-A)</option>
-                <option value="price-asc">Prezzo (Crescente)</option>
-                <option value="price-desc">Prezzo (Decrescente)</option>
-              </select>
+            {/* Pulsante Condividi */}
+            <div className='ms-auto'>
+              <button onClick={handleShare} className="btn btn-success d-flex align-items-center gap-2">
+                <FontAwesomeIcon icon={faShareFromSquare} />
+                Condividi
+              </button>
             </div>
-
           </div>
-          {/* Pulsante Condividi */}
+          {/* Messaggio di conferma che appare e scompare */}
+          {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
         </div>
-        <div className="row">
-          <div className='d-flex justify-content-center mx-auto'>
-            <button onClick={handleShare} className="btn btn-success d-flex align-items-center gap-2">
-              <FontAwesomeIcon icon={faShareFromSquare} />
-              Condividi
-            </button>
-          </div>
-        </div>
-        {/* Messaggio di conferma che appare e scompare */}
-        {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
       </div>
       <div className="row my-4">
         {/* 5. Usa 'processedProducts' per il rendering */}
         {processedProducts.length > 0 ? (
           processedProducts.map(product => {
             return (
-              <Card_Prod key={product.id} {...product} />
+              <div key={product.id} className="col-12 col-md-6 col-lg-4 noDecoration" >
+                <Link to={`/product/${product.slug}`} state={{
+                  id: product.id
+                }} >
+                  <div className="card " >
+                    <img src={product.image_url} className="card-img-top" alt="Product 1" />
+
+                    <div className="card-body">
+                      <h5 className="text-decoration-none card-title">{product.name}</h5>
+                      <p className="text-decoration-none card-text">{product.description}</p>
+                    </div>
+                    <div className="card-footer text-end">
+                      <button
+                        className="btn btn-link p-0"
+                        onClick={(e) => {
+                          e.preventDefault();
+                          toggleFavorite(product.id);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={solidHeart}
+                          style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
+                        />
+                      </button>
+                    </div>
+                  </div>
+                </Link>
+              </div>
             )
           })
         ) : (
