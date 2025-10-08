@@ -129,7 +129,7 @@ export default function CheckoutPage() {
 
                     <li key={idx} className="list-group-item d-flex justify-content-between align-items-start px-0">
                       <div className="me-3">
-                        <div className="fw-semibold">{it.name}</div>
+                        <div className="fw-semibold">{it.product_name}</div>
                         <small className="text-muted">Quantità: {it.quantity}</small>
                       </div>
                       <span className="fw-semibold text-primary">{(it.price * it.quantity).toFixed(2)} €</span>
