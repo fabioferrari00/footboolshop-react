@@ -13,7 +13,7 @@ import { Link } from 'react-router-dom';
 const DetailProductPage = () => {
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
-
+  const [notification, setNotification] = useState({ message: '', type: '' });
 
   //recupero slug
   const { slug } = useParams();
