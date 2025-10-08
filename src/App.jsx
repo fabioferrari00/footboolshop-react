@@ -10,6 +10,7 @@ import CartPage from '../pages/CartPage'
 import { CartProvider } from './CartContext'
 import FavoritesPage from '../pages/FavoritesPage';
 import EditProduct from '../pages/EditProduct'
+
 import { FavoritesProvider } from './components/FavoritesContext'; 
 
 function App() {
@@ -28,11 +29,14 @@ function App() {
               <Route path='/about_us' element={<AboutUsPage />} />
               <Route path='/cart' element={<CartPage />} />
               <Route path='/favorites' element={<FavoritesPage />} />
+              <Route path='/checkout' element={<Checkout />} />
+
             </Route>
           </Routes>
         </BrowserRouter>
         </FavoritesProvider>
       </CartProvider>
+
     </>
   )
 }

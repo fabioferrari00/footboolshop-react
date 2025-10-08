@@ -1,9 +1,13 @@
-import React, { createContext, useContext, useState, useMemo, } from 'react';
+import React, { createContext, useContext, useState, useMemo, useEffect } from 'react';
+import axios from 'axios';
 
 // 1. CONFIGURAZIONE BASE DEL CONTEXT
 
 // Crea il Context (il "Tabellone Centrale")
 const CartContext = createContext();
+
+// Chiave per il localStorage
+const LOCAL_STORAGE_KEY = 'shoppingCart'
 
 // Hook personalizzato per usare il Context (rende l'importazione più pulita)
 export const useCart = () => {
@@ -16,7 +20,7 @@ export const useCart = () => {
 // Questa funzione calcola i totali ogni volta che il carrello cambia
 const calculateTotals = (items) => {
   const SHIPPING_COST = 8.00;
-  const FREE_SHIPPING_THRESHOLD = 100.00; 
+  const FREE_SHIPPING_THRESHOLD = 50.00; 
 
   // Calcola il Subtotale totale (Prezzo * Quantità per ogni articolo)
   const subtotal = items.reduce((total, item) => total + (item.price * item.quantity), 0);
@@ -33,8 +37,21 @@ const calculateTotals = (items) => {
 // 3. IL PROVIDER (GESTORE DELLO STATO)
 
 export const CartProvider = ({ children }) => {
-  // Stato principale del carrello (l'array degli articoli)
-  const [cartItems, setCartItems] = useState([]); 
+   // Funzione per leggere lo stato iniziale dal localStorage
+ const getInitialCartItems = () => {
+  const storedItems = localStorage.getItem(LOCAL_STORAGE_KEY);
+  // Se ci sono articoli salvati, li parsifica e li usa, altrimenti inizia con un array vuoto
+  return storedItems ? JSON.parse(storedItems) : [];
+ };
+
+ // Stato principale del carrello - INIZIALIZZATO CON LA FUNZIONE CHE LEGGE IL LOCAL STORAGE
+ const [cartItems, setCartItems] = useState(getInitialCartItems);
+
+ // EFFETTO: Ogni volta che cartItems cambia, salva il nuovo stato nel localStorage
+ useEffect(() => {
+ localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cartItems));
+ console.log("Carrello salvato in localStorage:", cartItems);
+ }, [cartItems]); // Si attiva ogni volta che cartItems viene aggiornato
 
   // --- FUNZIONI DI MANIPOLAZIONE DELLO STATO ---
 
@@ -54,7 +71,7 @@ export const CartProvider = ({ children }) => {
         if (existingItem) {
             // Se esiste, aggiorno la quantità
             return prevItems.map(item =>
-                item.id == product.id // <-- CORRETTO: Uso '==' anche qui
+                item.id == product.id 
                     ? { ...item, quantity: item.quantity + numericQuantity }
                     : item
             );
