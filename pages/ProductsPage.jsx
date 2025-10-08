@@ -147,9 +147,24 @@ const ProductsPage = () => {
                       <h5 className="text-decoration-none card-title">{product.name}</h5>
                       <p className="text-decoration-none card-text">{product.description}</p>
                     </div>
+                    <div className="card-footer text-end">
+                      <button
+                        className="btn btn-link p-0"
+                        onClick={(e) => {
+                          e.preventDefault(); 
+                          toggleFavorite(product.id);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={solidHeart}
+                          style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
+                        />
+                      </button>
+                    </div>
                   </div>
                 </Link>
               </div>
+              
             )
           })
         ) : (
