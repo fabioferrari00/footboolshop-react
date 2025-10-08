@@ -6,6 +6,7 @@ import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 const Card_Prod = (product) => {
   return (
     <div className="col-12 col-md-6 col-lg-4  noDecoration" key={product.id} >
+
       <Link to={`/product/${product.slug}`} state={{ id: product.id }} >
         <div className="card " >
           <img src={product.image_url} className="card-img-top" alt="Product 1" />
