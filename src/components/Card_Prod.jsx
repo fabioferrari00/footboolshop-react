@@ -2,8 +2,15 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { useFavorites } from "../components/FavoritesContext";
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
+
+
 
 const Card_Prod = (product) => {
+
+  const { favorites, toggleFavorite } = useFavorites();
+
   return (
     <div className="col-12 col-md-6 col-lg-4  noDecoration" key={product.id} >
 
@@ -16,10 +23,18 @@ const Card_Prod = (product) => {
             <span>{product.price}€</span>
           </div>
           <div className="card-footer text-end">
-            <button className="btn btn-link p-0" onClick={(e) => { e.preventDefault(); }}>
-              <FontAwesomeIcon icon={solidHeart} />
-
-            </button>
+            <span
+              className="heart-icon"
+              onClick={(e) => {
+                e.preventDefault();
+                toggleFavorite(Number(product.id));
+              }}
+            >
+              <FontAwesomeIcon
+                icon={favorites.includes(Number(product.id)) ? solidHeart : regularHeart}
+                className={favorites.includes(Number(product.id)) ? "liked" : ""}
+              />
+            </span>
           </div>
         </div>
       </Link>
