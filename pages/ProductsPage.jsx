@@ -1,7 +1,7 @@
 import React from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
-import { useState, useEffect } from 'react';
+import { useState, useEffect, useCallback } from 'react';
 import { useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
@@ -19,17 +19,17 @@ const ProductsPage = () => {
   const [uniqueSizes, setUniqueSizes] = useState([]);
 
 
-  const fetchProducts = () => {
-
+  const fetchProducts = useCallback(() => {
     axios.get("http://localhost:3000/products").then((resp) => {
       setProducts(resp.data);
-
     }).catch((err) => {
       console.error(err);
-    })
+    });
+  }, []);
 
-  }
-  useEffect(fetchProducts, []);
+  useEffect(() => {
+    fetchProducts();
+  }, []);
 
 
   useEffect(() => {
@@ -67,7 +67,7 @@ const ProductsPage = () => {
 
       return nameMatch && sizeMatch && teamMatch;
     });
-  }, [filters]); // Ricalcola solo quando i filtri cambiano
+  }, [filters, products]); // Ricalcola solo quando i filtri cambiano
 
 
   return (
