@@ -4,11 +4,15 @@ import axios from 'axios';
 import { useState, useEffect } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { useFavorites } from '../src/components/FavoritesContext';
 
 const ProductsPage = () => {
 
   const [products, setProducts] = useState([]);
-  const [favorites, setFavorites] = useState([]);
+  const { favorites, toggleFavorite } = useFavorites();
+
+  
+  
 
   const fetchProducts = () => {
     axios.get("http://localhost:3000/products").then((resp) => {
@@ -17,22 +21,12 @@ const ProductsPage = () => {
   }
   useEffect(() => {
   fetchProducts();
-  const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
-  setFavorites(savedFavorites);
+  
 }, []);
 
 
-  useEffect(fetchProducts, [])
-  const toggleFavorite = (productId) => {
-  let updatedFavorites;
-  if (favorites.includes(productId)) {
-    updatedFavorites = favorites.filter(id => id !== productId);
-  } else {
-    updatedFavorites = [...favorites, productId];
-  }
-  setFavorites(updatedFavorites);
-  localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
-};
+  
+
 
   return (
     <div className="container">
@@ -47,7 +41,7 @@ const ProductsPage = () => {
         {products.map((product) => {
           if (product.team_name == "Inter")
             return (
-              <div className="col-12 col-md-6 col-lg-4  noDecoration" >
+              <div  key={product.id} className="col-12 col-md-6 col-lg-4  noDecoration" >
                 <Link to={`/product/${product.slug}`} state={{
                   id: product.id
                 }} >
@@ -84,7 +78,7 @@ const ProductsPage = () => {
         {products.map((product) => {
           if (product.team_name == "Milan")
             return (
-              <div className="col-12 col-md-6 col-lg-4  noDecoration" >
+              <div  key={product.id} className="col-12 col-md-6 col-lg-4  noDecoration" >
                 <Link to={`/product/${product.slug}`} state={{
                   id: product.id
                 }} >
@@ -120,7 +114,7 @@ const ProductsPage = () => {
         {products.map((product) => {
           if (product.team_name == "Roma")
             return (
-              <div className="col-12 col-md-6 col-lg-4  noDecoration" >
+              <div  key={product.id} className="col-12 col-md-6 col-lg-4  noDecoration" >
                 <Link to={`/product/${product.slug}`} state={{
                   id: product.id
                 }} >
@@ -157,7 +151,7 @@ const ProductsPage = () => {
         {products.map((product) => {
           if (product.team_name == "Cagliari")
             return (
-              <div className="col-12 col-md-6 col-lg-4 noDecoration" >
+              <div  key={product.id} className="col-12 col-md-6 col-lg-4 noDecoration" >
                 <Link to={`/product/${product.slug}`} state={{
                   id: product.id
                 }} >
@@ -193,7 +187,7 @@ const ProductsPage = () => {
         {products.map((product) => {
           if (product.team_name == "Juventus")
             return (
-              <div className="col-12 col-md-6 col-lg-4 noDecoration " >
+              <div  key={product.id} className="col-12 col-md-6 col-lg-4 noDecoration " >
                 <Link to={`/product/${product.slug}`} state={{
                   id: product.id
                 }} >
@@ -230,7 +224,7 @@ const ProductsPage = () => {
         {products.map((product) => {
           if (product.team_name == "Napoli")
             return (
-              <div className="col-12 col-md-6 col-lg-4 noDecoration" >
+              <div  key={product.id} className="col-12 col-md-6 col-lg-4 noDecoration" >
                 <Link to={`/product/${product.slug}`} state={{
                   id: product.id
                 }} >
