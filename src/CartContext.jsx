@@ -50,7 +50,6 @@ export const CartProvider = ({ children }) => {
   // EFFETTO: Ogni volta che cartItems cambia, salva il nuovo stato nel localStorage
   useEffect(() => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cartItems));
-    console.log("Carrello salvato in localStorage:", cartItems);
   }, [cartItems]); // Si attiva ogni volta che cartItems viene aggiornato
 
   // --- FUNZIONI DI MANIPOLAZIONE DELLO STATO ---

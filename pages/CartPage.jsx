@@ -18,7 +18,6 @@ function CartPage() {
     removeItem
   } = useCart();
 
-  console.log('Stato corrente del carrello (items):', items);
 
   // Funzione helper per formattare la valuta in €
   const formatCurrency = (amount) => `${amount.toFixed(2)} €`;
