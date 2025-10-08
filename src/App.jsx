@@ -11,7 +11,6 @@ import { CartProvider } from './CartContext'
 import FavoritesPage from '../pages/FavoritesPage';
 import EditProduct from '../pages/EditProduct'
 import Checkout from '../pages/Checkout'
-
 import { FavoritesProvider } from './components/FavoritesContext';
 
 function App() {

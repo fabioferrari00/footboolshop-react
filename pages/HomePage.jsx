@@ -8,7 +8,7 @@ import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
 import { useFavorites } from "../src/components/FavoritesContext";
 
-
+import Card_Prod from '../src/components/Card_Prod';
 const HomePage = () => {
 
   const [products, setProducts] = useState([]);
@@ -37,37 +37,9 @@ const HomePage = () => {
             if (product.arrival_date >= "2025-10-02")
 
               return (
-                <div className="col-12 col-md-6 col-lg-4 noDecoration" key={product.id}>
-                  <div className="card position-relative">
-                    <span
-                      className="heart-icon"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleFavorite(Number(product.id));
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={favorites.includes(Number(product.id)) ? solidHeart : regularHeart}
-                        className={favorites.includes(Number(product.id)) ? "liked" : ""}
-                      />
-                    </span>
-
-
-
-                    <Link to={`/product/${product.slug}`} state={{
-                      id: product.id
-                    }} >
-
-                      <img src={product.image_url} className="card-img-top" alt="Product 1" />
-
-                      <div className="card-body">
-                        <h5 className="text-decoration-none card-title">{product.name}</h5>
-                        <p className="text-decoration-none card-text">{product.description}</p>
-                      </div>
-
-                    </Link>
-                  </div>
-                </div>
+                <Card_Prod
+                  key={product.id}
+                  {...product} />
               )
           })
           }
@@ -79,34 +51,9 @@ const HomePage = () => {
           {products.map((product) => {
             if (product.size == "XXS" || product.size == 36)
               return (
-                <div className="col-12 col-md-6 col-lg-4 noDecoration" key={product.id}>
-                  <div className="card position-relative">
-                    <span
-                      className="heart-icon"
-                      onClick={(e) => {
-                        e.preventDefault();
-                        toggleFavorite(product.id);
-                      }}
-                    >
-                      <FontAwesomeIcon
-                        icon={favorites.includes(product.id) ? solidHeart : regularHeart}
-                        className={favorites.includes(product.id) ? "liked" : ""}
-                      />
-                    </span>
-                    <Link to={`/product/${product.slug}`} state={{
-                      id: product.id
-                    }} >
-                      <div className="card " >
-                        <img src={product.image_url} className="card-img-top" alt="Product 1" />
-
-                        <div className="card-body">
-                          <h5 className="text-decoration-none card-title">{product.name}</h5>
-                          <p className="text-decoration-none card-text">{product.description}</p>
-                        </div>
-                      </div>
-                    </Link>
-                  </div>
-                </div>
+                <Card_Prod
+                  key={product.id}
+                  {...product} />
               )
           })
           }
