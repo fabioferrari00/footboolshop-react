@@ -6,6 +6,12 @@ import { useState, useEffect } from 'react';
 import { useParams } from 'react-router-dom';
 import { useCart } from '../src/CartContext';
 import { Link } from 'react-router-dom';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { useFavorites } from "../src/components/FavoritesContext";
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
+
+
 
 
 
@@ -13,9 +19,10 @@ import { Link } from 'react-router-dom';
 const DetailProductPage = () => {
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
+  const { favorites, toggleFavorite } = useFavorites();
 
-  // 3. Aggiungi uno stato per il messaggio di conferma della copia
-  const [copySuccessMessage, setCopySuccessMessage] = useState('');
+  const [copySuccessMessage, setCopySuccessMessage] = useState('')
+
 
 
   //recupero slug
@@ -33,8 +40,14 @@ const DetailProductPage = () => {
 
   useEffect(fetchProduct, [slug])
 
-  const handleAddToCart = () => {
 
+  const showMessage = (message, type) => {
+    setNotification({ message, type });
+    // Nasconde il messaggio dopo 3 secondi
+    setTimeout(() => setNotification({ message: '', type: '' }), 3000);
+  };
+
+  const handleAddToCart = () => {
     // Controlliamo che il prodotto esista e che la quantità sia valida
     if (product.id && quantity > 0) {
       console.log('Prodotto aggiunto:', product);
@@ -50,7 +63,6 @@ const DetailProductPage = () => {
     }
     setCopySuccessMessage('Articolo aggiunto al carrello!');
     setTimeout(() => setCopySuccessMessage(''), 3000);
-
   }
 
 
@@ -85,13 +97,29 @@ const DetailProductPage = () => {
               className="form-control d-inline-block w-auto me-2"
             />
             <button
-              className='btn btn-primary me-2'
+              className='btn rounded-5 px-3 py-1 btn-success me-2'
               onClick={handleAddToCart} // <-- Collegamento della funzione al click
               disabled={!product.id} // Disabilita se i dati del prodotto non sono ancora caricati
             >
-              Aggiungi al carrello</button>
-            <button className='btn btn-primary me-2'>Preferiti</button>
-            {/* Messaggio di conferma che appare e scompare */}
+              Aggiungi al carrellino</button>
+
+            <button
+              type="button"
+              onClick={(e) => {
+                e.preventDefault();
+                toggleFavorite(Number(product.id));
+              }}
+              className={`btn rounded-5 px-3 py-1 ${favorites.includes(Number(product.id))
+                ? "btn-danger text-white"
+                : "btn-outline-secondary"
+                }`}
+            >
+              <FontAwesomeIcon
+                icon={favorites.includes(Number(product.id)) ? solidHeart : regularHeart}
+                className="me-2"
+              />
+              Preferiti
+            </button>
             {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
           </div>
         </div>
