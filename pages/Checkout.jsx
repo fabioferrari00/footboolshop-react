@@ -41,8 +41,6 @@ export default function CheckoutPage() {
 
   const total_price = useCart().total
 
-  console.log(items)
-  console.log(total_price)
 
   //    D A     R E C U P E R A R E   D A C A R T !!!!!!!
 
@@ -67,7 +65,6 @@ export default function CheckoutPage() {
 
     try {
       const res = await axios.post("http://localhost:3000/orders/add-order", payload);
-      console.log("Risposta server:", res.data);
       setMessage({ type: "success", text: "Ordine inviato!" });
     } catch (err) {
       console.error("Errore invio ordine:", err);

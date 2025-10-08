@@ -34,7 +34,6 @@ const DetailProductPage = () => {
   const fetchProduct = () => {
     axios.get(`http://localhost:3000/products/${slug}`).then((resp) => {
       setProduct(resp.data)
-      console.log(resp.data)
     })
   }
 
@@ -50,11 +49,8 @@ const DetailProductPage = () => {
   const handleAddToCart = () => {
     // Controlliamo che il prodotto esista e che la quantità sia valida
     if (product.id && quantity > 0) {
-      console.log('Prodotto aggiunto:', product);
-      console.log('ID Prodotto:', product.id);
       // L'oggetto product contiene già tutti i dati necessari (id, name, price, ecc.)
       addItem(product, quantity);
-      console.log('Chiamata addItem terminata. Lo stato del carrello DEVE essere aggiornato.')
       // Opzionale: azzerare la quantità
       setQuantity(1);
     } else {
@@ -74,10 +70,7 @@ const DetailProductPage = () => {
         </div>
         {/*dettagi prodotto*/}
         <div className="col-md-6">
-          <div className="d-flex">
-            <h1>{product.name}</h1>
-            <Link to={`/products/${slug}/edit`}><i className='fas fa-edit'></i></Link>
-          </div>
+          <h1>{product.name}</h1>
           <h2 className='text-success'>{`€ ${product.price}`}</h2>
           <p>{product.description}</p>
           <p>{`Squadra: ${product.team_name}`}</p>
