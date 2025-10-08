@@ -5,12 +5,15 @@ import DetailProductPage from '../pages/DetailProductPage'
 import ProductsPage from '../pages/ProductsPage'
 import ContactsPage from '../pages/ContactsPage'
 import AboutUsPage from '../pages/AboutUsPage'
+import CartPage from '../pages/CartPage'
+import { CartProvider } from './CartContext'
 import FavoritesPage from '../pages/FavoritesPage';
+
 
 function App() {
   return (
     <>
-
+    <CartProvider>
       <BrowserRouter>
         <Routes>
           <Route element={<DefaultLayout />}>
@@ -20,10 +23,12 @@ function App() {
             <Route path='/products/:slug/edit' element={<EditProduct />} />
             <Route path='/contacts' element={<ContactsPage />} />
             <Route path='/about_us' element={<AboutUsPage />} />
+            <Route path='/cart' element={<CartPage />} />
             <Route path='/favorites' element={<FavoritesPage />} /> 
           </Route>
         </Routes>
-      </BrowserRouter>
+        </BrowserRouter>
+        </CartProvider>
     </>
   )
 }
