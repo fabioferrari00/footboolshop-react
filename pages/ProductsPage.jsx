@@ -2,18 +2,37 @@ import React from 'react'
 import { Link } from 'react-router-dom'
 import axios from 'axios';
 import { useState, useEffect } from 'react';
+import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
+import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 
 const ProductsPage = () => {
 
   const [products, setProducts] = useState([]);
+  const [favorites, setFavorites] = useState([]);
 
   const fetchProducts = () => {
     axios.get("http://localhost:3000/products").then((resp) => {
       setProducts(resp.data)
     })
   }
+  useEffect(() => {
+  fetchProducts();
+  const savedFavorites = JSON.parse(localStorage.getItem("favorites")) || [];
+  setFavorites(savedFavorites);
+}, []);
+
 
   useEffect(fetchProducts, [])
+  const toggleFavorite = (productId) => {
+  let updatedFavorites;
+  if (favorites.includes(productId)) {
+    updatedFavorites = favorites.filter(id => id !== productId);
+  } else {
+    updatedFavorites = [...favorites, productId];
+  }
+  setFavorites(updatedFavorites);
+  localStorage.setItem("favorites", JSON.stringify(updatedFavorites));
+};
 
   return (
     <div className="container">
@@ -39,9 +58,24 @@ const ProductsPage = () => {
                       <h5 className="text-decoration-none card-title">{product.name}</h5>
                       <p className="text-decoration-none card-text">{product.description}</p>
                     </div>
+                    <div className="card-footer text-end">
+                      <button
+                        className="btn btn-link p-0"
+                        onClick={(e) => {
+                          e.preventDefault(); 
+                          toggleFavorite(product.id);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={solidHeart}
+                          style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
+                        />
+                      </button>
+                    </div>
                   </div>
                 </Link>
               </div>
+              
             )
         })}
       </div>
@@ -60,6 +94,20 @@ const ProductsPage = () => {
                     <div className="card-body">
                       <h5 className="text-decoration-none card-title">{product.name}</h5>
                       <p className="text-decoration-none card-text">{product.description}</p>
+                    </div>
+                    <div className="card-footer text-end">
+                      <button
+                        className="btn btn-link p-0"
+                        onClick={(e) => {
+                          e.preventDefault(); 
+                          toggleFavorite(product.id);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={solidHeart}
+                          style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
+                        />
+                      </button>
                     </div>
                   </div>
                 </Link>
@@ -83,9 +131,24 @@ const ProductsPage = () => {
                       <h5 className="text-decoration-none card-title">{product.name}</h5>
                       <p className="text-decoration-none card-text">{product.description}</p>
                     </div>
+                    <div className="card-footer text-end">
+                      <button
+                        className="btn btn-link p-0"
+                        onClick={(e) => {
+                          e.preventDefault(); 
+                          toggleFavorite(product.id);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={solidHeart}
+                          style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
+                        />
+                      </button>
+                    </div>
                   </div>
                 </Link>
               </div>
+
             )
         })}
       </div>
@@ -104,6 +167,20 @@ const ProductsPage = () => {
                     <div className="card-body">
                       <h5 className="text-decoration-none card-title">{product.name}</h5>
                       <p className="text-decoration-none card-text">{product.description}</p>
+                    </div>
+                    <div className="card-footer text-end">
+                      <button
+                        className="btn btn-link p-0"
+                        onClick={(e) => {
+                          e.preventDefault(); 
+                          toggleFavorite(product.id);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={solidHeart}
+                          style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
+                        />
+                      </button>
                     </div>
                   </div>
                 </Link>
@@ -127,9 +204,24 @@ const ProductsPage = () => {
                       <h5 className="text-decoration-none card-title">{product.name}</h5>
                       <p className="text-decoration-none card-text">{product.description}</p>
                     </div>
+                    <div className="card-footer text-end">
+                      <button
+                        className="btn btn-link p-0"
+                        onClick={(e) => {
+                          e.preventDefault(); 
+                          toggleFavorite(product.id);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={solidHeart}
+                          style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
+                        />
+                      </button>
+                    </div>
                   </div>
                 </Link>
               </div>
+              
             )
         })}
       </div>
@@ -148,6 +240,20 @@ const ProductsPage = () => {
                     <div className="card-body">
                       <h5 className="text-decoration-none card-title">{product.name}</h5>
                       <p className="text-decoration-none card-text">{product.description}</p>
+                    </div>
+                    <div className="card-footer text-end">
+                      <button
+                        className="btn btn-link p-0"
+                        onClick={(e) => {
+                          e.preventDefault(); 
+                          toggleFavorite(product.id);
+                        }}
+                      >
+                        <FontAwesomeIcon
+                          icon={solidHeart}
+                          style={{ color: favorites.includes(product.id) ? 'red' : 'gray' }}
+                        />
+                      </button>
                     </div>
                   </div>
                 </Link>
