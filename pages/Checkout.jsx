@@ -1,7 +1,32 @@
 import React, { useMemo, useState } from "react";
 import axios from "axios";
+import { useCart } from "../src/CartContext";
 
 export default function CheckoutPage() {
+
+  function getFormattedCartItems() {
+    const LOCAL_STORAGE_KEY = 'shoppingCart';
+
+    // 1️Recupero stringa salvata
+    const stored = localStorage.getItem(LOCAL_STORAGE_KEY);
+    if (!stored) return []; // Nessun carrello salvato
+
+    // 2️Converto la stringa in array di oggetti
+    const cartItems = JSON.parse(stored);
+
+    // 3️ Mappo i campi per rinominare le chiavi
+    const formatted = cartItems.map(item => ({
+      products_id: item.id,             // rinomina id
+      product_name: item.name || item.product_name, // supporta entrambi
+      quantity: item.quantity,
+      price: item.price
+    }));
+
+    return formatted;
+  }
+
+  const items = getFormattedCartItems();
+
   const [form, setForm] = useState({
     user_name: "",
     user_surname: "",
@@ -11,18 +36,15 @@ export default function CheckoutPage() {
     user_address: "",
   });
 
+
   //  Prodotti statici D A R E C U P E R A R E   D A C A R T !!!!!!!
-  const items = useMemo(
-    () => [
-      { products_id: 8, product_name: "Maglia Home Inter 2025", quantity: 1, price: 89.9 },
-      { products_id: 2, product_name: "Pantaloncini Home Inter 2025", quantity: 3, price: 39.9 },
-      { products_id: 3, product_name: "Calzettoni Inter 2025", quantity: 2, price: 25.0 },
-    ],
-    []
-  );
+
+  const total_price = useCart().total
+
+  console.log(items)
+  console.log(total_price)
 
   //    D A     R E C U P E R A R E   D A C A R T !!!!!!!
-  const total_price = 100
 
   const [message, setMessage] = useState(null);
 
@@ -104,9 +126,10 @@ export default function CheckoutPage() {
                 <h2 className="h5 mb-3">Riepilogo</h2>
                 <ul className="list-group list-group-flush">
                   {items.map((it, idx) => (
+
                     <li key={idx} className="list-group-item d-flex justify-content-between align-items-start px-0">
                       <div className="me-3">
-                        <div className="fw-semibold">{it.product_name}</div>
+                        <div className="fw-semibold">{it.name}</div>
                         <small className="text-muted">Quantità: {it.quantity}</small>
                       </div>
                       <span className="fw-semibold text-primary">{(it.price * it.quantity).toFixed(2)} €</span>

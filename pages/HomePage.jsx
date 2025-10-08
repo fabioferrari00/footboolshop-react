@@ -41,8 +41,6 @@ const HomePage = () => {
     );
   };
 
-
-
   return (
     <>
       <Jumbotron />
