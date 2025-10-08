@@ -46,7 +46,8 @@ const Header = () => {
               <Link className="nav-item nav-link" to={`/products`}>Prodotti</Link>
               <Link className="nav-item nav-link" to={`/favorites`}>
               <FontAwesomeIcon icon={faHeart} style={{ color: 'red', marginRight: '5px' }} />
-               Preferiti </Link>
+                Preferiti </Link>
+              <Link className="nav-item nav-link" to={`/cart`}>Carrello</Link>
               <Link className="nav-item nav-link" to={`/contacts`}>Contatti</Link>
               <Link className="nav-item nav-link" to={`/about_us`}>Chi siamo</Link>
             </div>
