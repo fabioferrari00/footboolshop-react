@@ -3,6 +3,8 @@ import axios from 'axios';
 import { Link } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
+import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
+import Card_Prod from '../src/components/Card_Prod';
 
 const FavoritesPage = () => {
   const [products, setProducts] = useState([]);
@@ -26,20 +28,9 @@ const FavoritesPage = () => {
       <div className="row gy-3">
         {favoriteProducts.length === 0 && <p>Nessun prodotto preferito.</p>}
         {favoriteProducts.map(product => (
-          <div className="col-12 col-md-6 col-lg-4" key={product.id}>
-            <div className="card">
-              <Link to={`/product/${product.slug}`} state={{ id: product.id }}>
-                <img src={product.image_url} className="card-img-top" alt={product.name} />
-                <div className="card-body">
-                  <h5 className="card-title">{product.name}</h5>
-                  <p className="card-text">{product.description}</p>
-                </div>
-              </Link>
-              <div className="card-footer text-end">
-                <FontAwesomeIcon icon={solidHeart} style={{ color: 'red' }} />
-              </div>
-            </div>
-          </div>
+          <Card_Prod
+            key={product.id}
+            {...product} />
         ))}
       </div>
     </div>
