@@ -12,6 +12,8 @@ import FavoritesPage from '../pages/FavoritesPage';
 import EditProduct from '../pages/EditProduct'
 import Checkout from '../pages/Checkout'
 import { FavoritesProvider } from './components/FavoritesContext';
+import NotFound from "../pages/NotFound";
+
 
 function App() {
   return (
@@ -30,7 +32,7 @@ function App() {
                 <Route path='/cart' element={<CartPage />} />
                 <Route path='/favorites' element={<FavoritesPage />} />
                 <Route path='/checkout' element={<Checkout />} />
-
+                <Route path="*" element={<NotFound />} /> {/* Catch-all */}
               </Route>
             </Routes>
           </BrowserRouter>

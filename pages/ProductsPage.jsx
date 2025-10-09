@@ -158,10 +158,10 @@ const ProductsPage = () => {
       <div className="row">
         <div className="col-12">
           {/* Controlli Filtri e Ordinamento */}
-          <div className='d-flex flex-wrap align-items-end gap-3 mb-4'>
+          <div className='d-flex flex-wrap align-items-end gap-3 mb-4 filterbar'>
             {/* Filtro Nome */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mb-1">Nome Prodotto</label>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mx2">Nome</label>
               <input
                 type="text"
                 name="name"
@@ -175,7 +175,7 @@ const ProductsPage = () => {
 
             {/* Filtro Team */}
             <div>
-              <label htmlFor="team_name" className="block text-sm font-medium text-gray-700 mb-1">Team</label>
+              <label htmlFor="team_name" className="block text-sm font-medium text-gray-700 mx-2">Team</label>
               <select
                 name="team_name"
                 id="team_name"
@@ -209,7 +209,7 @@ const ProductsPage = () => {
 
             {/* AGGIUNTO: Controllo Ordinamento */}
             <div>
-              <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mb-1">Ordina per</label>
+              <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mx-2">Ordina per</label>
               <select
                 name="sortOrder"
                 id="sortOrder"
@@ -226,16 +226,18 @@ const ProductsPage = () => {
             </div>
 
 
-            {/* Pulsante Condividi */}
-            <div className='ms-auto'>
-              <button onClick={handleShare} className="btn btn-success d-flex align-items-center gap-2">
-                <FontAwesomeIcon icon={faShareFromSquare} />
-                Condividi
-              </button>
-            </div>
+          </div>
+          {/* Pulsante Condividi */}
+
+          <div className='ms-auto d-flex justify-content-center'>
+            <button onClick={handleShare} className="btn btn-success d-flex align-items-center gap-2 justify-content-center">
+              <FontAwesomeIcon icon={faShareFromSquare} />
+              Condividi
+            </button>
           </div>
           {/* Messaggio di conferma che appare e scompare */}
           {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
+
         </div>
       </div>
       <div className="row my-4">
