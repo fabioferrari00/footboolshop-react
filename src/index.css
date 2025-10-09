@@ -48,6 +48,30 @@ footer {
     opacity: 0.8;
 }
 
+
+@media (max-width: 768px) {
+    .social-icon {
+        width: 30px;
+        height: 30px;
+    }
+
+        .social-icon i {
+        font-size: 0.9rem;
+    }
+
+    .motivational {
+        font-size: 1.7rem;
+    }
+
+    .address {
+        font-size: 0.6rem;
+    }
+
+    .socials {
+        font-size: 1.5rem;
+    }
+}
+
 .logo {
     color: #fff;
     width: 150px;
@@ -234,7 +258,7 @@ footer {
 }
 
 main {
-    min-height: 320px;
+    min-height: 50vh;
 }
 
 .order-cart {
