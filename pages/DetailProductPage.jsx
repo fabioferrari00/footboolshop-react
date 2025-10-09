@@ -10,6 +10,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
 import { useFavorites } from "../src/components/FavoritesContext";
 import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
+import { useNavigate } from 'react-router-dom';
+
 
 
 
@@ -20,6 +22,8 @@ const DetailProductPage = () => {
   const [product, setProduct] = useState({});
   const [quantity, setQuantity] = useState(1);
   const { favorites, toggleFavorite } = useFavorites();
+  const navigate = useNavigate();
+
 
   const [copySuccessMessage, setCopySuccessMessage] = useState('')
 
@@ -32,10 +36,20 @@ const DetailProductPage = () => {
   const { addItem } = useCart();
 
   const fetchProduct = () => {
-    axios.get(`http://localhost:3000/products/${slug}`).then((resp) => {
-      setProduct(resp.data)
-    })
-  }
+    axios
+      .get(`http://localhost:3000/products/${slug}`)
+      .then((resp) => {
+        if (!resp.data || Object.keys(resp.data).length === 0) {
+          // Nessun prodotto trovato
+          navigate("/404"); //  reindirizza alla pagina 404
+        } else {
+          setProduct(resp.data);
+        }
+      })
+      .catch(() => {
+        navigate("/404"); // se la richiesta fallisce
+      });
+  };
 
   useEffect(fetchProduct, [slug])
 
