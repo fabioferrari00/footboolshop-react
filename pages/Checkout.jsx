@@ -1,6 +1,7 @@
 import React, { useMemo, useState } from "react";
 import axios from "axios";
 import { useCart } from "../src/CartContext";
+import emailjs from "@emailjs/browser"; // ⬅️ importa in cima
 
 export default function CheckoutPage() {
 
@@ -52,6 +53,9 @@ export default function CheckoutPage() {
   };
 
   // Invio form tramite post su axios
+
+  // ...
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = {
@@ -64,13 +68,39 @@ export default function CheckoutPage() {
     setMessage(null);
 
     try {
+      // 1️⃣ Invio ordine al backend
       const res = await axios.post("http://localhost:3000/orders/add-order", payload);
       setMessage({ type: "success", text: "Ordine inviato!" });
+
+      // 2️⃣ Prepara i dati per l'email
+      const items_list = items
+        .map((it) => `${it.product_name} (x${it.quantity}) - €${(it.price * it.quantity).toFixed(2)}`)
+        .join("\n");
+
+      const emailData = {
+        user_name: form.user_name,
+        user_surname: form.user_surname,
+        user_mail: form.user_mail,
+        user_phone: form.user_phone,
+        user_city: form.user_city,
+        user_address: form.user_address,
+        total_price: total_price.toFixed(2),
+        items_list,
+      };
+
+      const serviceID = import.meta.env.VITE_EMAILJS_SERVICE_ID;
+      const templateID = import.meta.env.VITE_EMAILJS_TEMPLATE_ID;
+      const publicKey = import.meta.env.VITE_EMAILJS_PUBLIC_KEY;
+
+      await emailjs.send(serviceID, templateID, emailData, publicKey);
+
+      console.log("✅ Email inviata con successo!");
     } catch (err) {
-      console.error("Errore invio ordine:", err);
+      console.error("Errore:", err);
       setMessage({ type: "error", text: "Errore nell'invio. Riprova." });
     }
   };
+
 
   return (
     <div className="bg-light min-vh-100 py-5">
