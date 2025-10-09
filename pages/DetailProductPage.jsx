@@ -77,44 +77,64 @@ const DetailProductPage = () => {
           <p>{`Taglia: ${product.size}`}</p>
 
 
-          <div className='mt-4'>
+          {/*Div responsive mobile*/}
 
+          <div className="mt-4">
+            <div className="row g-2 align-items-center">
+              {/* Quantità */}
+              <div className="col-12 col-sm-4 col-md-auto">
+                <input
+                  type="number"
+                  min="1"
+                  value={quantity}
+                  onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
+                  className="form-control"
+                  style={{ maxWidth: 140 }}
+                />
+              </div>
 
+              {/* Aggiungi al carrello */}
+              <div className="col-12 col-sm-4 col-md-auto d-grid">
+                <button
+                  className="btn btn-success rounded-5 px-3 py-2"
+                  onClick={handleAddToCart}
+                  disabled={!product.id}
+                >
+                  Aggiungi al carrellino
+                </button>
+              </div>
 
+              {/* Preferiti */}
+              <div className="col-12 col-sm-4 col-md-auto d-grid">
+                <button
+                  type="button"
+                  onClick={(e) => {
+                    e.preventDefault();
+                    toggleFavorite(Number(product.id));
+                  }}
+                  className={`btn rounded-5 px-3 py-2 ${favorites.includes(Number(product.id))
+                    ? "btn-danger text-white"
+                    : "btn-outline-secondary"
+                    }`}
+                >
+                  <FontAwesomeIcon
+                    icon={favorites.includes(Number(product.id)) ? solidHeart : regularHeart}
+                    className="me-2"
+                  />
+                  Preferiti
+                </button>
+              </div>
 
-            <input
-              type="number"
-              min="1"
-              value={quantity}
-              onChange={(e) => setQuantity(parseInt(e.target.value) || 1)}
-              className="form-control d-inline-block w-auto me-2"
-            />
-            <button
-              className='btn rounded-5 px-3 py-1 btn-success me-2'
-              onClick={handleAddToCart} // <-- Collegamento della funzione al click
-              disabled={!product.id} // Disabilita se i dati del prodotto non sono ancora caricati
-            >
-              Aggiungi al carrellino</button>
-
-            <button
-              type="button"
-              onClick={(e) => {
-                e.preventDefault();
-                toggleFavorite(Number(product.id));
-              }}
-              className={`btn rounded-5 px-3 py-1 ${favorites.includes(Number(product.id))
-                ? "btn-danger text-white"
-                : "btn-outline-secondary"
-                }`}
-            >
-              <FontAwesomeIcon
-                icon={favorites.includes(Number(product.id)) ? solidHeart : regularHeart}
-                className="me-2"
-              />
-              Preferiti
-            </button>
-            {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
+              {/* Messaggio copia */}
+              {copySuccessMessage && (
+                <div className="col-12">
+                  <div className="alert alert-success mt-1 mb-0">{copySuccessMessage}</div>
+                </div>
+              )}
+            </div>
           </div>
+
+
         </div>
       </div>
       <Consigliati team={product.team_name} excludeId={product.id} />
