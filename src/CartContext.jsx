@@ -113,16 +113,20 @@ export const CartProvider = ({ children }) => {
 
   // Calcolo i totali ogni volta che cartItems cambia
   const totals = useMemo(() => calculateTotals(cartItems), [cartItems]);
+  const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
 
   // Oggetto che contiene tutti i dati e le funzioni da rendere disponibili
   const contextValue = {
     // Dati e totali
     items: cartItems,
     ...totals,
+    itemCount,
     // Funzioni
     addItem,
     removeItem,
     updateQuantity,
+    
   };
 
   return (

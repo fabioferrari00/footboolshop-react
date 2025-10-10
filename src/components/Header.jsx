@@ -2,8 +2,9 @@ import React from 'react';
 import { Link, NavLink } from 'react-router-dom';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faHeart, faHouse, faShirt, faCartShopping, faAddressBook, faFaceSmile } from '@fortawesome/free-solid-svg-icons';
-
+import { useCart } from '../CartContext';
 const Header = () => {
+const { itemCount } = useCart();
 
   const closeMenu = () => {
     const menu = document.getElementById('navbarNav');
@@ -52,7 +53,12 @@ const Header = () => {
                 </Link>
                 {/* style={{ color: 'red', marginRight: '5px' }} */}
                 <Link className="nav-item nav-link" to={`/cart`} onClick={closeMenu}>
-                  <FontAwesomeIcon icon={faCartShopping} /> Carrello</Link>
+                  <FontAwesomeIcon icon={faCartShopping} /> Carrello
+                   {itemCount > 0 && (
+                  <span className="cart-count-badge">{itemCount}</span>
+                  )}
+                  </Link>
+
                 <Link className="nav-item nav-link" to={`/contacts`} onClick={closeMenu}>
                   <FontAwesomeIcon icon={faAddressBook} /> Contatti</Link>
                 <Link className="nav-item nav-link" to={`/about_us`} onClick={closeMenu}>
