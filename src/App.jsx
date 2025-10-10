@@ -13,8 +13,8 @@ import EditProduct from '../pages/EditProduct'
 import Checkout from '../pages/Checkout'
 import { FavoritesProvider } from './components/FavoritesContext';
 import NotFound from "../pages/NotFound";
-import SearchPage from '../pages/searchPage'
-
+import SearchPage from '../pages/searchPage';
+import WelcomePopup from './components/WelcomePopup'
 
 function App() {
   return (
