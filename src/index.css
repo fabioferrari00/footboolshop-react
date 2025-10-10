@@ -53,15 +53,19 @@ footer {
         width: 30px;
         height: 30px;
     }
+
     .social-icon i {
         font-size: 0.9rem;
     }
+
     .motivational {
         font-size: 1.7rem;
     }
+
     .address {
         font-size: 0.6rem;
     }
+
     .socials {
         font-size: 1.5rem;
     }
@@ -266,19 +270,20 @@ main {
     border-radius: 30px;
     justify-content: space-around;
 }
+
 .cart-count-badge {
-  right: -10px;
-  background-color: rgb(255, 60, 0);
-  color: white;
-  border-radius: 50%;
-  padding: 2px 6px;
-  font-size: 12px;
-  font-weight: bold;
-  line-height: 1;
-  min-width: 18px;
-  text-align: center;
-  margin-left: 5px;
-  
+    right: -10px;
+    background-color: rgb(255, 60, 0);
+    color: white;
+    border-radius: 50%;
+    padding: 2px 6px;
+    font-size: 12px;
+    font-weight: bold;
+    line-height: 1;
+    min-width: 18px;
+    text-align: center;
+    margin-left: 5px;
+
 }
 
 
@@ -389,7 +394,50 @@ h2.h5 {
     .card-body {
         padding: 1.5rem;
     }
+
     .btn-primary {
         width: 100%;
     }
+}
+
+.pagination li {
+    margin: 0 10px;
+}
+
+.pagination li>.button-navigate {
+    background-color: green;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    border-radius: 5px;
+    cursor: pointer;
+    transition: background-color 0.3s, color 0.3s;
+
+}
+
+.pagination li>.pageNumber {
+    border-radius: 50% !important;
+    width: 40px;
+    height: 40px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 0;
+    font-size: 1rem;
+    font-weight: 500;
+    border: none;
+    background-color: green;
+    color: white;
+    transition: background-color 0.3s, color 0.3s;
+}
+
+.pagination li>.pageNumber:hover {
+    background-color: rgb(253, 230, 16);
+    color: white;
+}
+
+.pagination li.active .pageNumber {
+    background-color: rgb(253, 230, 16);
+    color: black;
+    font-weight: bold;
 }

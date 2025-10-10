@@ -7,6 +7,8 @@ import { faHeart as solidHeart, faShareFromSquare } from '@fortawesome/free-soli
 
 // prendiamo le funzioni per il carrello dal nostro Context!
 import { useCart } from '../src/CartContext'; 
+// PAGINAZIONE: 1. Definisci una costante per il numero di articoli per pagina
+const ITEMS_PER_PAGE = 15;
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
@@ -14,8 +16,8 @@ const ProductsPage = () => {
     name: '',
     size: '',
     team_name: '',
-  });
-  const [sortOrder, setSortOrder] = useState('default'); 
+  }); 
+  const [sortOrder, setSortOrder] = useState('default');
   const [favorites, setFavorites] = useState([]);
   const [uniqueTeams, setUniqueTeams] = useState([]);
   const [uniqueSizes, setUniqueSizes] = useState([]);
@@ -28,6 +30,8 @@ const ProductsPage = () => {
   // Lo stato per mostrare velocemente il messaggio di "Articolo aggiunto!"
   const [cartMessage, setCartMessage] = useState(''); 
 
+  // PAGINAZIONE: 2. Aggiungi lo stato per la pagina corrente
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchProducts = useCallback(() => {
     axios.get("http://localhost:3000/products").then((resp) => {
@@ -54,7 +58,6 @@ const ProductsPage = () => {
     fetchProducts();
   }, [fetchProducts, searchParams]);
 
-
   useEffect(() => {
     const teams = [...new Set(products.map(p => p.team_name))].sort();
     const sizes = [...new Set(products.map(p => p.size))].sort((a, b) => {
@@ -64,19 +67,11 @@ const ProductsPage = () => {
     setUniqueTeams(teams);
     setUniqueSizes(sizes);
   }, [products]);
-
-  // Gestione dei preferiti (la vecchia funzione, mantenuta)
-  const toggleFavorite = (productId) => {
-    setFavorites(prevFavorites => {
-      const isFavorite = prevFavorites.includes(productId);
-      let newFavorites = isFavorite 
-        ? prevFavorites.filter(id => id !== productId)
-        : [...prevFavorites, productId];
         
-      localStorage.setItem('favorites', JSON.stringify(newFavorites));
-      return newFavorites;
-    });
-  };
+  // PAGINAZIONE: 3. Aggiungi un useEffect per resettare la pagina quando i filtri cambiano
+  useEffect(() => {
+    setCurrentPage(1); // Torna alla prima pagina quando i filtri o l'ordinamento cambiano
+  }, [filters, sortOrder]);
   
   // La funzione per aggiungere al carrello: ora chiama solo il Context!
   const handleAddToCart = (product) => {
@@ -119,8 +114,9 @@ const ProductsPage = () => {
     });
   };
 
-  const processedProducts = useMemo(() => {
-    // 1. Fase di filtraggio
+  // PAGINAZIONE: 4. Aggiorna useMemo per calcolare i prodotti da visualizzare e il numero totale di pagine
+  const { paginatedProducts, totalPages } = useMemo(() => {
+    // Fase di filtraggio
     const filtered = products.filter(product => {
       const nameMatch = product.name.toLowerCase().includes(filters.name.toLowerCase());
       const sizeMatch = !filters.size || product.size === filters.size;
@@ -130,7 +126,6 @@ const ProductsPage = () => {
 
     // 2. Fase di ordinamento
     const sorted = [...filtered];
-
     switch (sortOrder) {
       case 'name-asc':
         sorted.sort((a, b) => a.name.localeCompare(b.name));
@@ -148,8 +143,21 @@ const ProductsPage = () => {
         break;
     }
 
-    return sorted;
-  }, [filters, products, sortOrder]);
+    // Fase di paginazione
+    const calculatedTotalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const paginatedItems = sorted.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+    return { paginatedProducts: paginatedItems, totalPages: calculatedTotalPages };
+  }, [filters, products, sortOrder, currentPage]); // Aggiungi currentPage alle dipendenze
+
+
+  // PAGINAZIONE: 5. Funzione per cambiare pagina
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return; // Evita di andare a pagine non esistenti
+    setCurrentPage(page);
+    window.scrollTo(0, 0); // Opzionale: scrolla in cima alla pagina quando cambi pagina
+  };
 
 
   return (
@@ -161,11 +169,11 @@ const ProductsPage = () => {
       </div>
       <div className="row">
         <div className="col-12">
-          {/* Controlli Filtri e Ordinamento */}
+          {/* Controlli Filtri e Ordinamento (invariati) */}
           <div className='d-flex flex-wrap align-items-end gap-3 mb-4 filterbar'>
             {/* Filtro Nome */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mx2">Nome</label>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mx-2">Nome</label>
               <input
                 type="text"
                 name="name"
@@ -228,18 +236,17 @@ const ProductsPage = () => {
                 <option value="price-desc">Prezzo (Decrescente)</option>
               </select>
             </div>
-
-
+            <div>
+              <div className="btn btn-success" onSubmit={handleShare}>Cerca</div>
+            </div>
           </div>
           {/* Pulsante Condividi */}
-
           <div className='ms-auto d-flex justify-content-center'>
             <button onClick={handleShare} className="btn btn-success d-flex align-items-center gap-2 justify-content-center">
               <FontAwesomeIcon icon={faShareFromSquare} />
               Condividi
             </button>
           </div>
-          {/* Messaggio di conferma che appare e scompare */}
           {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
           
           {/* Messaggio del carrello che appare quando aggiungi un prodotto */}
@@ -247,23 +254,47 @@ const ProductsPage = () => {
 
         </div>
       </div>
+
+      {totalPages > 1 && (
+        <div className="row">
+          <div className="col-12 d-flex justify-content-center my-4">
+            <nav aria-label="Page navigation">
+              <ul className="pagination">
+                {/* Pulsante Precedente */}
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button className="page-link button-navigate" onClick={() => handlePageChange(currentPage - 1)}>
+                    Precedente
+                  </button>
+                </li>
+
+                {/* Numeri di Pagina */}
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                    <button className="page-link pageNumber" onClick={() => handlePageChange(index + 1)}>
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+
+                {/* Pulsante Successivo */}
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button className="page-link button-navigate" onClick={() => handlePageChange(currentPage + 1)}>
+                    Successivo
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      )}
       <div className="row my-4">
-        {processedProducts.length > 0 ? (
-          processedProducts.map(product => {
-            // Controlla se il prodotto è già nel carrello usando gli 'items' del Context
-            const isInCart = cartItems.some(item => item.id == product.id); 
-            
+        {/* PAGINAZIONE: 6. Usa 'paginatedProducts' per il rendering */}
+        {paginatedProducts.length > 0 ? (
+          paginatedProducts.map(product => {
             return (
               <Card_Prod
                 key={product.id}
-                {...product}
-                toggleFavorite={toggleFavorite} 
-                isFavorite={favorites.includes(product.id)}
-                
-                // Passiamo la funzione che chiama il Context
-                onAddToCart={() => handleAddToCart(product)} 
-                isInCart={isInCart} 
-              />
+                {...product} />
             )
           })
         ) : (
@@ -273,7 +304,43 @@ const ProductsPage = () => {
           </div>
         )}
       </div>
+
+      {/* PAGINAZIONE: 7. Aggiungi i controlli di paginazione */}
+      {totalPages > 1 && (
+        <div className="row">
+          <div className="col-12 d-flex justify-content-center">
+            <nav aria-label="Page navigation">
+              <ul className="pagination">
+                {/* Pulsante Precedente */}
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button className="page-link button-navigate" onClick={() => handlePageChange(currentPage - 1)}>
+                    Precedente
+                  </button>
+                </li>
+
+                {/* Numeri di Pagina */}
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                    <button className="page-link pageNumber" onClick={() => handlePageChange(index + 1)}>
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+
+                {/* Pulsante Successivo */}
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button className="page-link button-navigate" onClick={() => handlePageChange(currentPage + 1)}>
+                    Successivo
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
+
 export default ProductsPage;
