@@ -107,23 +107,22 @@ const ProductsPage = () => {
     }));
   };
     
-  // La logica dei preferiti via localStorage è mantenuta qui
-  const toggleFavorite = (productId) => {
-    setFavorites(prevFavorites => {
-      const isFavorite = prevFavorites.includes(productId);
-      let newFavorites = isFavorite 
-        ? prevFavorites.filter(id => id !== productId)
-        : [...prevFavorites, productId];
-        
-      localStorage.setItem('favorites', JSON.stringify(newFavorites));
-      return newFavorites;
-    });
+  // RECUPERATA: Funzione per aggiungere al carrello
+  const handleAddToCart = (product) => {
+    addItem(product, 1); 
+    
+    // Messaggio di conferma che scompare dopo 3 secondi
+    setCartMessage(`"${product.name}" aggiunto al carrello! (Totale: ${itemCount + 1})`);
+    setTimeout(() => setCartMessage(''), 3000); 
   };
 
+
+  // RECUPERATA: Funzione per gestire il cambio di ordinamento (aggiorna stagedSortOrder)
   const handleSortChange = (event) => {
     setStagedSortOrder(event.target.value);
   };
-
+  
+  // CORRETTA: Logica dei preferiti via localStorage (solo una funzione)
   const toggleFavorite = (productId) => {
     setFavorites(prevFavorites => {
       const isFavorite = prevFavorites.includes(productId);
@@ -138,6 +137,7 @@ const ProductsPage = () => {
     });
   };
 
+
   // Funzione per APPLICARE i filtri e l'ordinamento all'URL (Al click di "Cerca")
   const applyFiltersToUrl = () => {
     // 1. Costruisci i nuovi parametri dell'URL usando gli stati STAGED
@@ -148,7 +148,7 @@ const ProductsPage = () => {
     if (stagedSortOrder && stagedSortOrder !== 'default') newParams.sort = stagedSortOrder;
 
     // 2. Naviga al nuovo URL. Questo innesca l'useEffect (dovuto a searchParams)
-    //    che aggiornerà gli stati ATTIVI e ricalcolerà la lista.
+    //    che aggiornerà gli stati ATTIVI e ricalcolerà la lista.
     navigate({
       pathname: window.location.pathname,
       search: new URLSearchParams(newParams).toString(),
@@ -293,7 +293,7 @@ const ProductsPage = () => {
                 <option value="price-desc">Prezzo (Decrescente)</option>
               </select>
             </div>
-            {/* Pulsante Cerca (invariato ma ora usa applyFiltersToUrl) */}
+            {/* Pulsante Cerca: CHIAMA applyFiltersToUrl */}
             <div>
               <button className="btn btn-success" onClick={applyFiltersToUrl}>Cerca</button>
             </div>
@@ -344,10 +344,10 @@ const ProductsPage = () => {
         </div>
       )}
       <div className="row my-4">
-        {/* PAGINAZIONE: 6. Usa 'paginatedProducts' per il rendering (invariato) */}
+        {/* PAGINAZIONE: 6. Usa 'paginatedProducts' per il rendering */}
         {paginatedProducts.length > 0 ? (
           paginatedProducts.map(product => {
-            // CORREZIONE CRITICA: Controlla se il prodotto è nel carrello e passa le props
+            // Controlla se il prodotto è nel carrello e passa le props
             const isInCart = cartItems.some(item => item.id == product.id);
             
             return (
