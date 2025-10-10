@@ -266,6 +266,20 @@ main {
     border-radius: 30px;
     justify-content: space-around;
 }
+.cart-count-badge {
+  right: -10px;
+  background-color: rgb(255, 60, 0);
+  color: white;
+  border-radius: 50%;
+  padding: 2px 6px;
+  font-size: 12px;
+  font-weight: bold;
+  line-height: 1;
+  min-width: 18px;
+  text-align: center;
+  margin-left: 5px;
+  
+}
 
 
 /* ======= SEZIONE PRINCIPALE ======= */
