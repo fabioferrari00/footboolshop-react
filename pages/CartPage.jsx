@@ -1,8 +1,11 @@
 import React from 'react';
-
 import { useCart } from '../src/CartContext';
 // import './CartPage.css'; 
 import { Link } from 'react-router-dom';
+import Swal from 'sweetalert2';
+import withReactContent from 'sweetalert2-react-content';
+
+const MySwal = withReactContent(Swal); 
 
 function CartPage() {
 
@@ -78,8 +81,21 @@ function CartPage() {
                 <p className="fw-bold mb-1">{formatCurrency(item.price * item.quantity)}</p>
                 <button
                   // 5. LOGICA: Rimuovi l'articolo
-                  onClick={() => removeItem(item.id)}
-                  className="btn btn-danger p-1"
+                  onClick={() => {
+                    MySwal.fire({
+                    title: `Sei sicuro di voler rimuovere "${item.name}" dal carrello?`,
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonText: 'Sì, rimuovi',
+                    cancelButtonText: 'Annulla',
+                  }).then((result) => {
+                    if (result.isConfirmed) {
+                      removeItem(item.id);
+                      MySwal.fire('Rimosso!', 'Il prodotto è stato rimosso dal carrello.', 'success');
+                    }              
+                  })
+                }}
+                 className="btn btn-danger p-1"
                 >
                   Rimuovi
                 </button>
