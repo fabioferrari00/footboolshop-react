@@ -1,36 +1,38 @@
-
 import { Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { useState, useEffect, useCallback, useMemo } from 'react'; // Rimosso l'import di useMemo duplicato
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Card_Prod from '../src/components/Card_Prod'; // Presumo che questo componente sia corretto
-// 1. Importa le icone necessarie
+import Card_Prod from '../src/components/Card_Prod';
 import { faHeart as solidHeart, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
+
+// prendiamo le funzioni per il carrello dal nostro Context!
+import { useCart } from '../src/CartContext'; 
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  
   const [filters, setFilters] = useState({
     name: '',
     size: '',
     team_name: '',
   });
-  // 1. AGGIUNTO: Stato per l'ordinamento
-  const [sortOrder, setSortOrder] = useState('default'); // 'default', 'name-asc', 'name-desc', 'price-asc', 'price-desc'
-  // 2. AGGIUNTO: Stato per i preferiti (assumiamo che vengano gestiti localmente o tramite un hook/context)
+  const [sortOrder, setSortOrder] = useState('default'); 
   const [favorites, setFavorites] = useState([]);
   const [uniqueTeams, setUniqueTeams] = useState([]);
   const [uniqueSizes, setUniqueSizes] = useState([]);
   const [searchParams] = useSearchParams();
-
-  // 3. Aggiungi uno stato per il messaggio di conferma della copia
   const [copySuccessMessage, setCopySuccessMessage] = useState('');
+
+  // Sfruttiamo il carrello centralizzato (Context) per aggiungere prodotti e vedere il conteggio.
+  const { addItem, items: cartItems, itemCount } = useCart();
+  
+  // Lo stato per mostrare velocemente il messaggio di "Articolo aggiunto!"
+  const [cartMessage, setCartMessage] = useState(''); 
 
 
   const fetchProducts = useCallback(() => {
     axios.get("http://localhost:3000/products").then((resp) => {
       setProducts(resp.data);
-      // OPTIONAL: Recupera i preferiti dal localStorage all'avvio
+      // Il carrello è gestito dal Context, ma i preferiti li teniamo qui via localStorage.
       const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
       setFavorites(savedFavorites);
     }).catch((err) => {
@@ -63,21 +65,28 @@ const ProductsPage = () => {
     setUniqueSizes(sizes);
   }, [products]);
 
-  // 4. AGGIUNTO: Funzione per gestire i preferiti
+  // Gestione dei preferiti (la vecchia funzione, mantenuta)
   const toggleFavorite = (productId) => {
     setFavorites(prevFavorites => {
       const isFavorite = prevFavorites.includes(productId);
-      let newFavorites;
-      if (isFavorite) {
-        newFavorites = prevFavorites.filter(id => id !== productId);
-      } else {
-        newFavorites = [...prevFavorites, productId];
-      }
-      // Aggiorna il localStorage per persistenza
+      let newFavorites = isFavorite 
+        ? prevFavorites.filter(id => id !== productId)
+        : [...prevFavorites, productId];
+        
       localStorage.setItem('favorites', JSON.stringify(newFavorites));
       return newFavorites;
     });
   };
+  
+  // La funzione per aggiungere al carrello: ora chiama solo il Context!
+  const handleAddToCart = (product) => {
+    addItem(product, 1); 
+    
+    // Messaggio di conferma che scompare dopo 3 secondi
+    setCartMessage(`"${product.name}" aggiunto al carrello! (Totale: ${itemCount + 1})`);
+    setTimeout(() => setCartMessage(''), 3000); 
+  };
+
 
   const handleFilterChange = (event) => {
     const { name, value } = event.target;
@@ -87,7 +96,6 @@ const ProductsPage = () => {
     }));
   };
 
-  // 2. Funzione per gestire il cambio di ordinamento (era già presente, ora usa 'setSortOrder')
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
   };
@@ -97,7 +105,6 @@ const ProductsPage = () => {
     if (filters.name) params.append('name', filters.name);
     if (filters.size) params.append('size', filters.size);
     if (filters.team_name) params.append('team_name', filters.team_name);
-    // Aggiungo anche l'ordinamento se è diverso da 'default' per la condivisione
     if (sortOrder && sortOrder !== 'default') params.append('sort', sortOrder);
 
     const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
@@ -112,9 +119,8 @@ const ProductsPage = () => {
     });
   };
 
-  // 3. Aggiorna useMemo per applicare prima il filtro e poi l'ordinamento
   const processedProducts = useMemo(() => {
-    // Fase di filtraggio (invariata)
+    // 1. Fase di filtraggio
     const filtered = products.filter(product => {
       const nameMatch = product.name.toLowerCase().includes(filters.name.toLowerCase());
       const sizeMatch = !filters.size || product.size === filters.size;
@@ -122,7 +128,7 @@ const ProductsPage = () => {
       return nameMatch && sizeMatch && teamMatch;
     });
 
-    // Fase di ordinamento
+    // 2. Fase di ordinamento
     const sorted = [...filtered];
 
     switch (sortOrder) {
@@ -132,7 +138,6 @@ const ProductsPage = () => {
       case 'name-desc':
         sorted.sort((a, b) => b.name.localeCompare(a.name));
         break;
-      // Assicurati che i tuoi oggetti 'product' abbiano una proprietà 'price'.
       case 'price-asc':
         sorted.sort((a, b) => a.price - b.price);
         break;
@@ -140,7 +145,6 @@ const ProductsPage = () => {
         sorted.sort((a, b) => b.price - a.price);
         break;
       default:
-        // Lascia l'ordinamento originale (o quello del server) se 'default'
         break;
     }
 
@@ -207,7 +211,7 @@ const ProductsPage = () => {
               </select>
             </div>
 
-            {/* AGGIUNTO: Controllo Ordinamento */}
+            {/* Controllo Ordinamento */}
             <div>
               <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mx-2">Ordina per</label>
               <select
@@ -237,20 +241,29 @@ const ProductsPage = () => {
           </div>
           {/* Messaggio di conferma che appare e scompare */}
           {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
+          
+          {/* Messaggio del carrello che appare quando aggiungi un prodotto */}
+          {cartMessage && <div className="alert alert-info mt-2">{cartMessage}</div>}
 
         </div>
       </div>
       <div className="row my-4">
-        {/* 5. Usa 'processedProducts' per il rendering */}
         {processedProducts.length > 0 ? (
           processedProducts.map(product => {
-            // 5. MODIFICATO: Utilizza il componente Card_Prod importato per coerenza
-            // e passa tutte le prop necessarie, inclusa la logica per i preferiti.
+            // Controlla se il prodotto è già nel carrello usando gli 'items' del Context
+            const isInCart = cartItems.some(item => item.id == product.id); 
+            
             return (
               <Card_Prod
                 key={product.id}
-                {...product} />
-
+                {...product}
+                toggleFavorite={toggleFavorite} 
+                isFavorite={favorites.includes(product.id)}
+                
+                // Passiamo la funzione che chiama il Context
+                onAddToCart={() => handleAddToCart(product)} 
+                isInCart={isInCart} 
+              />
             )
           })
         ) : (
