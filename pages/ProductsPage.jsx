@@ -106,6 +106,19 @@ const ProductsPage = () => {
       [name]: value,
     }));
   };
+    
+  // La logica dei preferiti via localStorage è mantenuta qui
+  const toggleFavorite = (productId) => {
+    setFavorites(prevFavorites => {
+      const isFavorite = prevFavorites.includes(productId);
+      let newFavorites = isFavorite 
+        ? prevFavorites.filter(id => id !== productId)
+        : [...prevFavorites, productId];
+        
+      localStorage.setItem('favorites', JSON.stringify(newFavorites));
+      return newFavorites;
+    });
+  };
 
   const handleSortChange = (event) => {
     setStagedSortOrder(event.target.value);
@@ -300,6 +313,7 @@ const ProductsPage = () => {
         </div>
       </div>
 
+
       {/* Paginazione superiore (invariata) */}
       {totalPages > 1 && (
         <div className="row">
@@ -333,13 +347,19 @@ const ProductsPage = () => {
         {/* PAGINAZIONE: 6. Usa 'paginatedProducts' per il rendering (invariato) */}
         {paginatedProducts.length > 0 ? (
           paginatedProducts.map(product => {
+            // CORREZIONE CRITICA: Controlla se il prodotto è nel carrello e passa le props
+            const isInCart = cartItems.some(item => item.id == product.id);
+            
             return (
               <Card_Prod
                 key={product.id}
-                {...product}
-                toggleFavorite={toggleFavorite}
+                {...product} 
+                toggleFavorite={toggleFavorite} 
                 isFavorite={favorites.includes(product.id)}
-                solidHeart={solidHeart}
+                
+                // PASSAGGIO DELLE PROPS DEL CARRELLO
+                onAddToCart={() => handleAddToCart(product)} 
+                isInCart={isInCart} 
               />
             )
           })
