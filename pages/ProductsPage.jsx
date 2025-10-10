@@ -232,6 +232,9 @@ const ProductsPage = () => {
                 <option value="price-desc">Prezzo (Decrescente)</option>
               </select>
             </div>
+            <div>
+              <div className="btn btn-success" onSubmit={handleShare}>Cerca</div>
+            </div>
           </div>
           {/* Pulsante Condividi */}
           <div className='ms-auto d-flex justify-content-center'>
