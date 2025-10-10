@@ -53,15 +53,19 @@ footer {
         width: 30px;
         height: 30px;
     }
+
     .social-icon i {
         font-size: 0.9rem;
     }
+
     .motivational {
         font-size: 1.7rem;
     }
+
     .address {
         font-size: 0.6rem;
     }
+
     .socials {
         font-size: 1.5rem;
     }
@@ -389,9 +393,18 @@ h2.h5 {
     .card-body {
         padding: 1.5rem;
     }
-    .btn-primary {
-        width: 100%;
+
+}
+
+@media (max-width: 615px) {
+    .hero-title {
+        font-size: 3.5rem;
     }
+
+    .hero-subtitle {
+        font-size: 2.5rem;
+    }
+
 }
 
 .pagination li {
