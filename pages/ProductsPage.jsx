@@ -5,6 +5,8 @@ import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import Card_Prod from '../src/components/Card_Prod';
 import { faHeart as solidHeart, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 
+// prendiamo le funzioni per il carrello dal nostro Context!
+import { useCart } from '../src/CartContext'; 
 // PAGINAZIONE: 1. Definisci una costante per il numero di articoli per pagina
 const ITEMS_PER_PAGE = 15;
 
@@ -35,12 +37,19 @@ const ProductsPage = () => {
   const navigate = useNavigate();
   const [copySuccessMessage, setCopySuccessMessage] = useState('');
 
+  // Sfruttiamo il carrello centralizzato (Context) per aggiungere prodotti e vedere il conteggio.
+  const { addItem, items: cartItems, itemCount } = useCart();
+  
+  // Lo stato per mostrare velocemente il messaggio di "Articolo aggiunto!"
+  const [cartMessage, setCartMessage] = useState(''); 
+
   // PAGINAZIONE: 2. Aggiungi lo stato per la pagina corrente
   const [currentPage, setCurrentPage] = useState(1);
 
   const fetchProducts = useCallback(() => {
     axios.get("http://localhost:3000/products").then((resp) => {
       setProducts(resp.data);
+      // Il carrello è gestito dal Context, ma i preferiti li teniamo qui via localStorage.
       const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
       setFavorites(savedFavorites);
     }).catch((err) => {
@@ -157,7 +166,7 @@ const ProductsPage = () => {
       return nameMatch && sizeMatch && teamMatch;
     });
 
-    // Fase di ordinamento
+    // 2. Fase di ordinamento
     const sorted = [...filtered];
     switch (activeSortOrder) { // Usa activeSortOrder
       case 'name-asc':
@@ -284,6 +293,10 @@ const ProductsPage = () => {
             </button>
           </div>
           {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
+          
+          {/* Messaggio del carrello che appare quando aggiungi un prodotto */}
+          {cartMessage && <div className="alert alert-info mt-2">{cartMessage}</div>}
+
         </div>
       </div>
 
