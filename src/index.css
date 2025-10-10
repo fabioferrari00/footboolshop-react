@@ -283,7 +283,6 @@ main {
     min-width: 18px;
     text-align: center;
     margin-left: 5px;
-
 }
 
 
@@ -395,9 +394,17 @@ h2.h5 {
         padding: 1.5rem;
     }
 
-    .btn-primary {
-        width: 100%;
+}
+
+@media (max-width: 615px) {
+    .hero-title {
+        font-size: 3.5rem;
     }
+
+    .hero-subtitle {
+        font-size: 2.5rem;
+    }
+
 }
 
 .pagination li {
@@ -412,7 +419,6 @@ h2.h5 {
     border-radius: 5px;
     cursor: pointer;
     transition: background-color 0.3s, color 0.3s;
-
 }
 
 .pagination li>.pageNumber {
@@ -440,4 +446,47 @@ h2.h5 {
     background-color: rgb(253, 230, 16);
     color: black;
     font-weight: bold;
+}
+
+
+/* M E S S A G G I O     D I      B E N V E N U T O */
+
+
+/* Stile base per entrambi i pulsanti */
+
+.btn-custom {
+    font-weight: 600;
+    letter-spacing: 0.5px;
+    border-radius: 10px;
+    padding: 0.6rem 1.4rem;
+    transition: all 0.3s ease;
+}
+
+
+/* Pulsante Annulla */
+
+.btn-cancel {
+    color: #555;
+    background-color: #f8f9fa;
+    border: 2px solid #ccc;
+}
+
+.btn-cancel:hover {
+    background-color: #e9ecef;
+    border-color: #999;
+    color: #000;
+    transform: translateY(-2px);
+}
+
+
+/* Pulsante Invia */
+
+.btn-send {
+    background: linear-gradient(135deg, #f4f4f4, #4be882);
+    color: #fff;
+    border: none;
+}
+
+.btn-send:hover {
+    transform: translateY(-2px);
 }

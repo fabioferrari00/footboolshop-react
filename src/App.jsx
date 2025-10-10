@@ -22,6 +22,7 @@ function App() {
       <CartProvider>
         <FavoritesProvider>
           <BrowserRouter>
+            <WelcomePopup />
             <Routes>
               <Route element={<DefaultLayout />}>
                 <Route path='/' element={<HomePage />} />

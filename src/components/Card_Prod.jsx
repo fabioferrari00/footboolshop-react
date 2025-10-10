@@ -47,12 +47,12 @@ const Card_Prod = (
                     onAddToCart(); // Chiama la funzione inviata da ProductsPage
                   }} 
                   // Stile condizionale in base a isInCart
-                  className={`btn ${isInCart ? 'btn-warning' : 'btn-primary'} d-flex align-items-center gap-2 btn-sm`}
+                  className={`btn ${isInCart ? 'btn-success' : 'btn-primary'} d-flex align-items-center gap-2 btn-sm`}
                   title={isInCart ? "Già nel carrello" : "Aggiungi al Carrello"}
                 >
                   <FontAwesomeIcon icon={isInCart ? faCheckCircle : faShoppingCart} />
                   {/* Testo leggermente accorciato per la Card */}
-                  {isInCart ? 'Aggiunto' : 'Aggiungi al carrello'}
+                  {isInCart ? 'Aggiungi ancora' : 'Aggiungi al carrello'}
                 </button>
 
             </div>

@@ -5,7 +5,7 @@ import { Link } from 'react-router-dom';
 import Swal from 'sweetalert2';
 import withReactContent from 'sweetalert2-react-content';
 
-const MySwal = withReactContent(Swal); 
+const MySwal = withReactContent(Swal);
 
 function CartPage() {
 
@@ -83,19 +83,19 @@ function CartPage() {
                   // 5. LOGICA: Rimuovi l'articolo
                   onClick={() => {
                     MySwal.fire({
-                    title: `Sei sicuro di voler rimuovere "${item.name}" dal carrello?`,
-                    icon: 'warning',
-                    showCancelButton: true,
-                    confirmButtonText: 'Sì, rimuovi',
-                    cancelButtonText: 'Annulla',
-                  }).then((result) => {
-                    if (result.isConfirmed) {
-                      removeItem(item.id);
-                      MySwal.fire('Rimosso!', 'Il prodotto è stato rimosso dal carrello.', 'success');
-                    }              
-                  })
-                }}
-                 className="btn btn-danger p-1"
+                      title: `Sei sicuro di voler rimuovere "${item.name}" dal carrello?`,
+                      icon: 'warning',
+                      showCancelButton: true,
+                      confirmButtonText: 'Sì, rimuovi',
+                      cancelButtonText: 'Annulla',
+                    }).then((result) => {
+                      if (result.isConfirmed) {
+                        removeItem(item.id);
+                        MySwal.fire('Rimosso!', 'Il prodotto è stato rimosso dal carrello.', 'success');
+                      }
+                    })
+                  }}
+                  className="btn btn-danger p-1"
                 >
                   Rimuovi
                 </button>
@@ -120,6 +120,7 @@ function CartPage() {
               {shipping === 0 ? 'Gratuita' : formatCurrency(shipping)}
             </span>
           </div>
+          <span>*Spedizione gratuita sopra i 50,00€</span>
 
           <div className="d-flex justify-content-between summary-total mb-4">
             <h3 className="mb-0">Totale:</h3>
