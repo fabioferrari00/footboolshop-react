@@ -1,7 +1,7 @@
 import React from 'react';
-// 1. IMPORTAZIONE: Assicurati che il percorso sia corretto rispetto al tuo CartContext.jsx
+
 import { useCart } from '../src/CartContext';
-// import './CartPage.css'; // Non dimenticare di importare gli stili
+// import './CartPage.css'; 
 import { Link } from 'react-router-dom';
 
 function CartPage() {
@@ -19,7 +19,7 @@ function CartPage() {
   } = useCart();
 
 
-  // Funzione helper per formattare la valuta in €
+  // Funzione per formattare la valuta in €
   const formatCurrency = (amount) => `${amount.toFixed(2)} €`;
 
   // Visualizzazione: Carrello vuoto
@@ -29,7 +29,6 @@ function CartPage() {
         <div className="cart-page empty">
           <h1>Il tuo carrello è vuoto</h1>
           <p>È il momento perfetto per esplorare i nostri prodotti!</p>
-          {/* Inserisci un link alla Home o alla ProductsPage */}
         </div>
       </div >
     );
@@ -42,7 +41,7 @@ function CartPage() {
 
       <div className="row">
 
-        {/* A. Area degli Articoli (Lista) */}
+        {/* Area degli Articoli (Lista) */}
         <div className="col-lg-8 cart-items-list">
           {items.map(item => (
             <div key={item.id} className="cart-item d-flex align-items-center mb-3 border-bottom pb-3">
@@ -90,7 +89,7 @@ function CartPage() {
           ))}
         </div>
 
-        {/* B. Area del Riepilogo Ordine (Totali) */}
+        {/* Area del Riepilogo Ordine (Totali) */}
         <div className="col-lg-4 cart-summary bg-light p-4 rounded border order-cart">
           <h2>Riepilogo Ordine</h2>
 
