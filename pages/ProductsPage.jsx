@@ -1,4 +1,4 @@
-import { Link, useSearchParams, useNavigate } from 'react-router-dom';
+import { Link, useSearchParams, useNavigate, useParams } from 'react-router-dom';
 import axios from 'axios';
 import { useState, useEffect, useCallback, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
@@ -6,7 +6,7 @@ import Card_Prod from '../src/components/Card_Prod';
 import { faHeart as solidHeart, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
 
 // prendiamo le funzioni per il carrello dal nostro Context!
-import { useCart } from '../src/CartContext'; 
+import { useCart } from '../src/CartContext';
 // PAGINAZIONE: 1. Definisci una costante per il numero di articoli per pagina
 const ITEMS_PER_PAGE = 15;
 
@@ -39,9 +39,9 @@ const ProductsPage = () => {
 
   // Sfruttiamo il carrello centralizzato (Context) per aggiungere prodotti e vedere il conteggio.
   const { addItem, items: cartItems, itemCount } = useCart();
-  
+
   // Lo stato per mostrare velocemente il messaggio di "Articolo aggiunto!"
-  const [cartMessage, setCartMessage] = useState(''); 
+  const [cartMessage, setCartMessage] = useState('');
 
   // PAGINAZIONE: 2. Aggiungi lo stato per la pagina corrente
   const [currentPage, setCurrentPage] = useState(1);
@@ -52,6 +52,7 @@ const ProductsPage = () => {
       // Il carrello è gestito dal Context, ma i preferiti li teniamo qui via localStorage.
       const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
       setFavorites(savedFavorites);
+      console.log(savedFavorites)
     }).catch((err) => {
       console.error(err);
     });
@@ -150,7 +151,7 @@ const ProductsPage = () => {
     // 2. Naviga al nuovo URL. Questo innesca l'useEffect (dovuto a searchParams)
     //    che aggiornerà gli stati ATTIVI e ricalcolerà la lista.
     navigate({
-      pathname: window.location.pathname,
+      pathname: "/search",
       search: new URLSearchParams(newParams).toString(),
     });
   };
@@ -251,7 +252,7 @@ const ProductsPage = () => {
                 value={stagedFilters.team_name}
                 onChange={handleFilterChange}
                 className="w-full pl-3 pr-10 py-2 border border-gray-300 bg-white rounded-lg shadow-sm focus:ring-indigo-500 focus:border-indigo-500 appearance-none cursor-pointer transition duration-150"
-              >
+              >-
                 <option value="">Tutti i Team</option>
                 {uniqueTeams.map(team_name => (
                   <option key={team_name} value={team_name}>{team_name}</option>
@@ -306,7 +307,7 @@ const ProductsPage = () => {
             </button>
           </div>
           {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
-          
+
           {/* Messaggio del carrello che appare quando aggiungi un prodotto */}
           {cartMessage && <div className="alert alert-info mt-2">{cartMessage}</div>}
 
