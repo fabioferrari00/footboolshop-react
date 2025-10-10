@@ -1,6 +1,9 @@
 import React, { useMemo, useState } from "react";
 import axios from "axios";
 import { useCart } from "../src/CartContext";
+import emailjs from "@emailjs/browser";
+
+
 
 export default function CheckoutPage() {
 
@@ -52,6 +55,7 @@ export default function CheckoutPage() {
   };
 
   // Invio form tramite post su axios
+
   const handleSubmit = async (e) => {
     e.preventDefault();
     const payload = {
@@ -65,12 +69,50 @@ export default function CheckoutPage() {
 
     try {
       const res = await axios.post("http://localhost:3000/orders/add-order", payload);
-      setMessage({ type: "success", text: "Ordine inviato!" });
+      setMessage({ type: "success", text: "Graize per aver acquistato da noi! Ordine ricevuto, controlla la tua mail per gli aggiornamenti della spedizione." });
+
+      // Svuota il carrello dal localStorage
+      localStorage.removeItem('shoppingCart');
+
+      //Prepara i dati per l'email
+      const items_list = items
+        .map((it) => `${it.product_name} (x${it.quantity}) - €${(it.price * it.quantity).toFixed(2)}`)
+        .join("\n");
+
+      const emailData = {
+        user_name: form.user_name,
+        user_surname: form.user_surname,
+        user_mail: form.user_mail,
+        user_phone: form.user_phone,
+        user_city: form.user_city,
+        user_address: form.user_address,
+        total_price: total_price.toFixed(2),
+        items_list,
+      };
+
+      //Invia al proprietario
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID,
+        emailData,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+
+      //Invia al cliente (nuovo template)
+      await emailjs.send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID_CUSTOMER, // 👈 nuovo template
+        emailData,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      );
+
+      console.log("✅ Email inviata con successo!");
     } catch (err) {
-      console.error("Errore invio ordine:", err);
+      console.error("Errore:", err);
       setMessage({ type: "error", text: "Errore nell'invio. Riprova." });
     }
   };
+
 
   return (
     <div className="bg-light min-vh-100 py-5">
@@ -83,70 +125,75 @@ export default function CheckoutPage() {
 
         {/* Messaggi */}
         {message && (
-          <div className={`alert ${message.type === "success" ? "alert-success" : "alert-danger"} text-center`} role="alert">
+          <div
+            className={`alert ${message.type === "success" ? "alert-success" : "alert-danger"} text-center`}
+            role="alert"
+          >
             {message.text}
           </div>
         )}
 
-        <div className="row g-4">
-          {/* Form */}
-          <div className="col-12 col-lg-8">
-            <div className="card shadow-sm border-0">
-              <div className="card-body p-4">
-                <h2 className="h5 mb-3">Dati cliente</h2>
-                <form onSubmit={handleSubmit}>
-                  <div className="row g-3">
-                    <Field label="Nome" name="user_name" value={form.user_name} onChange={handleChange} placeholder="Es. Alex" />
-                    <Field label="Cognome" name="user_surname" value={form.user_surname} onChange={handleChange} placeholder="Es. Dessanai" />
-                    <Field type="email" label="Email" name="user_mail" value={form.user_mail} onChange={handleChange} placeholder="esempio@mail.com" />
-                    <Field label="Telefono" name="user_phone" value={form.user_phone} onChange={handleChange} placeholder="Es. +39 349 1234567" />
-                    <Field label="Città" name="user_city" value={form.user_city} onChange={handleChange} placeholder="Es. Cagliari" />
-                    <Field label="Indirizzo" name="user_address" value={form.user_address} onChange={handleChange} placeholder="Es. Via Roma 15" full />
-                  </div>
+        {/* Mostra form e riepilogo solo se l'ordine NON è stato inviato */}
+        {message?.type !== "success" && (
+          <div className="row g-4">
+            {/* Form */}
+            <div className="col-12 col-lg-8">
+              <div className="card shadow-sm border-0">
+                <div className="card-body p-4">
+                  <h2 className="h5 mb-3">Dati cliente</h2>
+                  <form onSubmit={handleSubmit}>
+                    <div className="row g-3">
+                      <Field label="Nome" name="user_name" value={form.user_name} onChange={handleChange} placeholder="Es. Alex" />
+                      <Field label="Cognome" name="user_surname" value={form.user_surname} onChange={handleChange} placeholder="Es. Dessanai" />
+                      <Field type="email" label="Email" name="user_mail" value={form.user_mail} onChange={handleChange} placeholder="esempio@mail.com" />
+                      <Field label="Telefono" name="user_phone" value={form.user_phone} onChange={handleChange} placeholder="Es. +39 349 1234567" />
+                      <Field label="Città" name="user_city" value={form.user_city} onChange={handleChange} placeholder="Es. Cagliari" />
+                      <Field label="Indirizzo" name="user_address" value={form.user_address} onChange={handleChange} placeholder="Es. Via Roma 15" full />
+                    </div>
 
-                  <div className="d-flex gap-2 mt-4">
-                    <button type="submit" className="btn btn-primary px-4">
-                      Paga
-                    </button>
-                  </div>
-                </form>
+                    <div className="d-flex gap-2 mt-4">
+                      <button type="submit" className="btn btn-primary px-4">
+                        Paga
+                      </button>
+                    </div>
+                  </form>
+                </div>
               </div>
             </div>
-          </div>
 
-
-
-          {/* Riepilogo  dati D A R E C U P E R A R E*/}
-          <div className="col-12 col-lg-4">
-            <div className="card shadow-sm border-0">
-              <div className="card-body p-4">
-                <h2 className="h5 mb-3">Riepilogo</h2>
-                <ul className="list-group list-group-flush">
-                  {items.map((it, idx) => (
-
-                    <li key={idx} className="list-group-item d-flex justify-content-between align-items-start px-0">
-                      <div className="me-3">
-                        <div className="fw-semibold">{it.product_name}</div>
-                        <small className="text-muted">Quantità: {it.quantity}</small>
-                      </div>
-                      <span className="fw-semibold text-primary">{(it.price * it.quantity).toFixed(2)} €</span>
-                    </li>
-                  ))}
-                </ul>
-                <div className="mt-3 p-3 bg-body-tertiary rounded border">
-                  <div className="d-flex justify-content-between align-items-center">
-                    <span className="fw-semibold">Totale</span>
-                    <span className="fs-5 fw-bold text-primary">{total_price.toFixed(2)} €</span>
+            {/* Riepilogo */}
+            <div className="col-12 col-lg-4">
+              <div className="card shadow-sm border-0">
+                <div className="card-body p-4">
+                  <h2 className="h5 mb-3">Riepilogo</h2>
+                  <ul className="list-group list-group-flush">
+                    {items.map((it, idx) => (
+                      <li key={idx} className="list-group-item d-flex justify-content-between align-items-start px-0">
+                        <div className="me-3">
+                          <div className="fw-semibold">{it.product_name}</div>
+                          <small className="text-muted">Quantità: {it.quantity}</small>
+                        </div>
+                        <span className="fw-semibold text-primary">
+                          {(it.price * it.quantity).toFixed(2)} €
+                        </span>
+                      </li>
+                    ))}
+                  </ul>
+                  <div className="mt-3 p-3 bg-body-tertiary rounded border">
+                    <div className="d-flex justify-content-between align-items-center">
+                      <span className="fw-semibold">Totale</span>
+                      <span className="fs-5 fw-bold text-primary">{total_price.toFixed(2)} €</span>
+                    </div>
                   </div>
                 </div>
-                <small className="text-muted d-block mt-2">* Prodotti fissi per la demo. I dati cliente provengono dal form.</small>
               </div>
             </div>
           </div>
-        </div>
+        )}
       </div>
     </div>
   );
+
 }
 
 //funzione per che crea oggetto 

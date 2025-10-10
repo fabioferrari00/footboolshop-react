@@ -3,15 +3,14 @@ import axios from 'axios';
 
 // 1. CONFIGURAZIONE BASE DEL CONTEXT
 
-// Crea il Context (il "Tabellone Centrale")
+// Crea il Context
 const CartContext = createContext();
 
 // Chiave per il localStorage
 const LOCAL_STORAGE_KEY = 'shoppingCart'
 
-// Hook personalizzato per usare il Context (rende l'importazione più pulita)
+// Hook personalizzato per usare il Context 
 export const useCart = () => {
-  // Connette il componente al Tabellone e legge i valori
   return useContext(CartContext);
 };
 
@@ -34,7 +33,7 @@ const calculateTotals = (items) => {
 };
 
 
-// 3. IL PROVIDER (GESTORE DELLO STATO)
+// 3. IL PROVIDER
 
 export const CartProvider = ({ children }) => {
   // Funzione per leggere lo stato iniziale dal localStorage
@@ -52,11 +51,11 @@ export const CartProvider = ({ children }) => {
     localStorage.setItem(LOCAL_STORAGE_KEY, JSON.stringify(cartItems));
   }, [cartItems]); // Si attiva ogni volta che cartItems viene aggiornato
 
-  // --- FUNZIONI DI MANIPOLAZIONE DELLO STATO ---
+  //  FUNZIONI DI MANIPOLAZIONE DELLO STATO 
 
   // Funzione per Aggiungere o Aggiornare un articolo
   const addItem = (product, quantity = 1) => {
-    // 1. CONVERSIONI FUORI dallo setter (più pulito)
+    // 1. CONVERSIONI FUORI dallo setter
     const numericPrice = parseFloat(product.price);
     const numericQuantity = parseInt(quantity);
 
@@ -64,7 +63,6 @@ export const CartProvider = ({ children }) => {
     if (numericQuantity <= 0 || isNaN(numericPrice)) return;
 
     setCartItems(prevItems => {
-      // 2. USO '==' OVUNQUE per ignorare la differenza tra stringa e numero nell'ID
       const existingItem = prevItems.find(item => item.id == product.id);
 
       if (existingItem) {
@@ -75,20 +73,20 @@ export const CartProvider = ({ children }) => {
             : item
         );
       } else {
-        // Se non esiste, aggiungo un nuovo articolo (con prezzo e quantità come numeri)
+        // Se non esiste, aggiungo un nuovo articolo
         return [
           ...prevItems,
           {
             ...product,
-            price: numericPrice, // Prezzo salvato come NUMERO
-            quantity: numericQuantity // Quantità salvata come NUMERO
+            price: numericPrice,
+            quantity: numericQuantity
           }
         ];
       }
     });
   };
 
-  // Funzione per Rimuovere completamente un articolo (ad esempio, tramite un bottone 'X')
+  // Funzione per Rimuovere completamente un articolo
   const removeItem = (productId) => {
     setCartItems(prevItems =>
       // Uso il filter per restituire un nuovo array ESCLUDENDO l'articolo da rimuovere
@@ -96,7 +94,7 @@ export const CartProvider = ({ children }) => {
     );
   };
 
-  // Funzione per Aggiornare la quantità (usata da bottoni '+' o '-')
+  // Funzione per Aggiornare la quantità
   const updateQuantity = (productId, newQuantity) => {
     // Se la quantità arriva a zero o meno, rimuovo l'articolo
     if (newQuantity <= 0) {
@@ -115,17 +113,20 @@ export const CartProvider = ({ children }) => {
 
   // Calcolo i totali ogni volta che cartItems cambia
   const totals = useMemo(() => calculateTotals(cartItems), [cartItems]);
+  const itemCount = cartItems.reduce((total, item) => total + item.quantity, 0);
+
 
   // Oggetto che contiene tutti i dati e le funzioni da rendere disponibili
   const contextValue = {
     // Dati e totali
     items: cartItems,
     ...totals,
+    itemCount,
     // Funzioni
     addItem,
     removeItem,
     updateQuantity,
-    // Qui si possono aggiungere altre funzioni come 'clearCart'
+    
   };
 
   return (
