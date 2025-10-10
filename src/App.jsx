@@ -13,6 +13,7 @@ import EditProduct from '../pages/EditProduct'
 import Checkout from '../pages/Checkout'
 import { FavoritesProvider } from './components/FavoritesContext';
 import NotFound from "../pages/NotFound";
+import WelcomePopup from './components/WelcomePopup'
 
 
 function App() {
@@ -21,6 +22,7 @@ function App() {
       <CartProvider>
         <FavoritesProvider>
           <BrowserRouter>
+            <WelcomePopup />
             <Routes>
               <Route element={<DefaultLayout />}>
                 <Route path='/' element={<HomePage />} />
