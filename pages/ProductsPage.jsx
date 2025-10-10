@@ -1,36 +1,33 @@
-
 import { Link, useSearchParams } from 'react-router-dom';
 import axios from 'axios';
-import { useState, useEffect, useCallback, useMemo } from 'react'; // Rimosso l'import di useMemo duplicato
+import { useState, useEffect, useCallback, useMemo } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import Card_Prod from '../src/components/Card_Prod'; // Presumo che questo componente sia corretto
-// 1. Importa le icone necessarie
+import Card_Prod from '../src/components/Card_Prod';
 import { faHeart as solidHeart, faShareFromSquare } from '@fortawesome/free-solid-svg-icons';
+
+// PAGINAZIONE: 1. Definisci una costante per il numero di articoli per pagina
+const ITEMS_PER_PAGE = 15;
 
 const ProductsPage = () => {
   const [products, setProducts] = useState([]);
-  
   const [filters, setFilters] = useState({
     name: '',
     size: '',
     team_name: '',
   });
-  // 1. AGGIUNTO: Stato per l'ordinamento
-  const [sortOrder, setSortOrder] = useState('default'); // 'default', 'name-asc', 'name-desc', 'price-asc', 'price-desc'
-  // 2. AGGIUNTO: Stato per i preferiti (assumiamo che vengano gestiti localmente o tramite un hook/context)
+  const [sortOrder, setSortOrder] = useState('default');
   const [favorites, setFavorites] = useState([]);
   const [uniqueTeams, setUniqueTeams] = useState([]);
   const [uniqueSizes, setUniqueSizes] = useState([]);
   const [searchParams] = useSearchParams();
-
-  // 3. Aggiungi uno stato per il messaggio di conferma della copia
   const [copySuccessMessage, setCopySuccessMessage] = useState('');
 
+  // PAGINAZIONE: 2. Aggiungi lo stato per la pagina corrente
+  const [currentPage, setCurrentPage] = useState(1);
 
   const fetchProducts = useCallback(() => {
     axios.get("http://localhost:3000/products").then((resp) => {
       setProducts(resp.data);
-      // OPTIONAL: Recupera i preferiti dal localStorage all'avvio
       const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
       setFavorites(savedFavorites);
     }).catch((err) => {
@@ -52,7 +49,6 @@ const ProductsPage = () => {
     fetchProducts();
   }, [fetchProducts, searchParams]);
 
-
   useEffect(() => {
     const teams = [...new Set(products.map(p => p.team_name))].sort();
     const sizes = [...new Set(products.map(p => p.size))].sort((a, b) => {
@@ -63,7 +59,12 @@ const ProductsPage = () => {
     setUniqueSizes(sizes);
   }, [products]);
 
-  // 4. AGGIUNTO: Funzione per gestire i preferiti
+  // PAGINAZIONE: 3. Aggiungi un useEffect per resettare la pagina quando i filtri cambiano
+  useEffect(() => {
+    setCurrentPage(1); // Torna alla prima pagina quando i filtri o l'ordinamento cambiano
+  }, [filters, sortOrder]);
+
+
   const toggleFavorite = (productId) => {
     setFavorites(prevFavorites => {
       const isFavorite = prevFavorites.includes(productId);
@@ -73,7 +74,6 @@ const ProductsPage = () => {
       } else {
         newFavorites = [...prevFavorites, productId];
       }
-      // Aggiorna il localStorage per persistenza
       localStorage.setItem('favorites', JSON.stringify(newFavorites));
       return newFavorites;
     });
@@ -87,7 +87,6 @@ const ProductsPage = () => {
     }));
   };
 
-  // 2. Funzione per gestire il cambio di ordinamento (era già presente, ora usa 'setSortOrder')
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
   };
@@ -97,7 +96,6 @@ const ProductsPage = () => {
     if (filters.name) params.append('name', filters.name);
     if (filters.size) params.append('size', filters.size);
     if (filters.team_name) params.append('team_name', filters.team_name);
-    // Aggiungo anche l'ordinamento se è diverso da 'default' per la condivisione
     if (sortOrder && sortOrder !== 'default') params.append('sort', sortOrder);
 
     const shareUrl = `${window.location.origin}${window.location.pathname}?${params.toString()}`;
@@ -112,9 +110,9 @@ const ProductsPage = () => {
     });
   };
 
-  // 3. Aggiorna useMemo per applicare prima il filtro e poi l'ordinamento
-  const processedProducts = useMemo(() => {
-    // Fase di filtraggio (invariata)
+  // PAGINAZIONE: 4. Aggiorna useMemo per calcolare i prodotti da visualizzare e il numero totale di pagine
+  const { paginatedProducts, totalPages } = useMemo(() => {
+    // Fase di filtraggio
     const filtered = products.filter(product => {
       const nameMatch = product.name.toLowerCase().includes(filters.name.toLowerCase());
       const sizeMatch = !filters.size || product.size === filters.size;
@@ -124,7 +122,6 @@ const ProductsPage = () => {
 
     // Fase di ordinamento
     const sorted = [...filtered];
-
     switch (sortOrder) {
       case 'name-asc':
         sorted.sort((a, b) => a.name.localeCompare(b.name));
@@ -132,7 +129,6 @@ const ProductsPage = () => {
       case 'name-desc':
         sorted.sort((a, b) => b.name.localeCompare(a.name));
         break;
-      // Assicurati che i tuoi oggetti 'product' abbiano una proprietà 'price'.
       case 'price-asc':
         sorted.sort((a, b) => a.price - b.price);
         break;
@@ -140,12 +136,24 @@ const ProductsPage = () => {
         sorted.sort((a, b) => b.price - a.price);
         break;
       default:
-        // Lascia l'ordinamento originale (o quello del server) se 'default'
         break;
     }
 
-    return sorted;
-  }, [filters, products, sortOrder]);
+    // Fase di paginazione
+    const calculatedTotalPages = Math.ceil(sorted.length / ITEMS_PER_PAGE);
+    const startIndex = (currentPage - 1) * ITEMS_PER_PAGE;
+    const paginatedItems = sorted.slice(startIndex, startIndex + ITEMS_PER_PAGE);
+
+    return { paginatedProducts: paginatedItems, totalPages: calculatedTotalPages };
+  }, [filters, products, sortOrder, currentPage]); // Aggiungi currentPage alle dipendenze
+
+
+  // PAGINAZIONE: 5. Funzione per cambiare pagina
+  const handlePageChange = (page) => {
+    if (page < 1 || page > totalPages) return; // Evita di andare a pagine non esistenti
+    setCurrentPage(page);
+    window.scrollTo(0, 0); // Opzionale: scrolla in cima alla pagina quando cambi pagina
+  };
 
 
   return (
@@ -157,11 +165,11 @@ const ProductsPage = () => {
       </div>
       <div className="row">
         <div className="col-12">
-          {/* Controlli Filtri e Ordinamento */}
+          {/* Controlli Filtri e Ordinamento (invariati) */}
           <div className='d-flex flex-wrap align-items-end gap-3 mb-4 filterbar'>
             {/* Filtro Nome */}
             <div>
-              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mx2">Nome</label>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 mx-2">Nome</label>
               <input
                 type="text"
                 name="name"
@@ -207,7 +215,7 @@ const ProductsPage = () => {
               </select>
             </div>
 
-            {/* AGGIUNTO: Controllo Ordinamento */}
+            {/* Controllo Ordinamento */}
             <div>
               <label htmlFor="sortOrder" className="block text-sm font-medium text-gray-700 mx-2">Ordina per</label>
               <select
@@ -224,33 +232,61 @@ const ProductsPage = () => {
                 <option value="price-desc">Prezzo (Decrescente)</option>
               </select>
             </div>
-
-
+            <div>
+              <div className="btn btn-success" onSubmit={handleShare}>Cerca</div>
+            </div>
           </div>
           {/* Pulsante Condividi */}
-
           <div className='ms-auto d-flex justify-content-center'>
             <button onClick={handleShare} className="btn btn-success d-flex align-items-center gap-2 justify-content-center">
               <FontAwesomeIcon icon={faShareFromSquare} />
               Condividi
             </button>
           </div>
-          {/* Messaggio di conferma che appare e scompare */}
           {copySuccessMessage && <div className="alert alert-success mt-2">{copySuccessMessage}</div>}
-
         </div>
       </div>
+
+      {totalPages > 1 && (
+        <div className="row">
+          <div className="col-12 d-flex justify-content-center my-4">
+            <nav aria-label="Page navigation">
+              <ul className="pagination">
+                {/* Pulsante Precedente */}
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button className="page-link button-navigate" onClick={() => handlePageChange(currentPage - 1)}>
+                    Precedente
+                  </button>
+                </li>
+
+                {/* Numeri di Pagina */}
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                    <button className="page-link pageNumber" onClick={() => handlePageChange(index + 1)}>
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+
+                {/* Pulsante Successivo */}
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button className="page-link button-navigate" onClick={() => handlePageChange(currentPage + 1)}>
+                    Successivo
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      )}
       <div className="row my-4">
-        {/* 5. Usa 'processedProducts' per il rendering */}
-        {processedProducts.length > 0 ? (
-          processedProducts.map(product => {
-            // 5. MODIFICATO: Utilizza il componente Card_Prod importato per coerenza
-            // e passa tutte le prop necessarie, inclusa la logica per i preferiti.
+        {/* PAGINAZIONE: 6. Usa 'paginatedProducts' per il rendering */}
+        {paginatedProducts.length > 0 ? (
+          paginatedProducts.map(product => {
             return (
               <Card_Prod
                 key={product.id}
                 {...product} />
-
             )
           })
         ) : (
@@ -260,7 +296,43 @@ const ProductsPage = () => {
           </div>
         )}
       </div>
+
+      {/* PAGINAZIONE: 7. Aggiungi i controlli di paginazione */}
+      {totalPages > 1 && (
+        <div className="row">
+          <div className="col-12 d-flex justify-content-center">
+            <nav aria-label="Page navigation">
+              <ul className="pagination">
+                {/* Pulsante Precedente */}
+                <li className={`page-item ${currentPage === 1 ? 'disabled' : ''}`}>
+                  <button className="page-link button-navigate" onClick={() => handlePageChange(currentPage - 1)}>
+                    Precedente
+                  </button>
+                </li>
+
+                {/* Numeri di Pagina */}
+                {Array.from({ length: totalPages }, (_, index) => (
+                  <li key={index + 1} className={`page-item ${currentPage === index + 1 ? 'active' : ''}`}>
+                    <button className="page-link pageNumber" onClick={() => handlePageChange(index + 1)}>
+                      {index + 1}
+                    </button>
+                  </li>
+                ))}
+
+                {/* Pulsante Successivo */}
+                <li className={`page-item ${currentPage === totalPages ? 'disabled' : ''}`}>
+                  <button className="page-link button-navigate" onClick={() => handlePageChange(currentPage + 1)}>
+                    Successivo
+                  </button>
+                </li>
+              </ul>
+            </nav>
+          </div>
+        </div>
+      )}
+
     </div>
   );
 }
+
 export default ProductsPage;
