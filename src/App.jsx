@@ -13,6 +13,7 @@ import EditProduct from '../pages/EditProduct'
 import Checkout from '../pages/Checkout'
 import { FavoritesProvider } from './components/FavoritesContext';
 import NotFound from "../pages/NotFound";
+import SearchPage from '../pages/searchPage'
 
 
 function App() {
@@ -32,6 +33,7 @@ function App() {
                 <Route path='/cart' element={<CartPage />} />
                 <Route path='/favorites' element={<FavoritesPage />} />
                 <Route path='/checkout' element={<Checkout />} />
+                <Route path='/search' element={<SearchPage />} />
                 <Route path="*" element={<NotFound />} /> {/* Catch-all */}
               </Route>
             </Routes>
