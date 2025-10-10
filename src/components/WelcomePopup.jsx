@@ -1,4 +1,5 @@
 import React, { useEffect, useState } from "react";
+import emailjs from "@emailjs/browser";
 
 // chiave per localStorage
 const LS_KEY = "welcome_seen_v1";
@@ -43,12 +44,32 @@ export default function WelcomePopup({ onSubmit }) {
 
     onSubmit?.({ name: name.trim(), mail: mail.trim(), date: new Date().toISOString() });
 
-    // mostra messaggio di conferma per 2 secondi
-    setConfirmationVisible(true);
-    setTimeout(() => {
-      setConfirmationVisible(false);
-      closeForever();
-    }, 2000);
+    const templateParams = {
+      name: name.trim(),
+      mail: mail.trim(),
+    };
+
+    emailjs
+      .send(
+        import.meta.env.VITE_EMAILJS_SERVICE_ID,
+        import.meta.env.VITE_EMAILJS_TEMPLATE_ID_WELCOME,
+        templateParams,
+        import.meta.env.VITE_EMAILJS_PUBLIC_KEY
+      )
+      .then(
+        () => {
+          setConfirmationVisible(true);
+          setTimeout(() => {
+            setConfirmationVisible(false);
+            closeForever();
+          }, 2000);
+        },
+        (err) => {
+          console.error("Errore invio email:", err);
+          alert("Errore nell'invio dell'email, riprova più tardi.");
+        }
+      );
+
   };
   // annulla = chiudi e salva come visto
   const handleCancel = () => {
@@ -80,6 +101,7 @@ export default function WelcomePopup({ onSubmit }) {
                 </label>
                 <input
                   type="text"
+                  name="name"
                   className={`form-control ${errors.name ? "is-invalid" : ""}`}
                   value={name}
                   onChange={(e) => setName(e.target.value)}
@@ -95,6 +117,7 @@ export default function WelcomePopup({ onSubmit }) {
                 </label>
                 <input
                   type="email"
+                  name="mail"
                   className={`form-control ${errors.mail ? "is-invalid" : ""}`}
                   value={mail}
                   onChange={(e) => setMail(e.target.value)}
