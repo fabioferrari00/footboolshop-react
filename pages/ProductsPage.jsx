@@ -90,6 +90,19 @@ const ProductsPage = () => {
       [name]: value,
     }));
   };
+    
+  // La logica dei preferiti via localStorage è mantenuta qui
+  const toggleFavorite = (productId) => {
+    setFavorites(prevFavorites => {
+      const isFavorite = prevFavorites.includes(productId);
+      let newFavorites = isFavorite 
+        ? prevFavorites.filter(id => id !== productId)
+        : [...prevFavorites, productId];
+        
+      localStorage.setItem('favorites', JSON.stringify(newFavorites));
+      return newFavorites;
+    });
+  };
 
   const handleSortChange = (event) => {
     setSortOrder(event.target.value);
@@ -169,7 +182,7 @@ const ProductsPage = () => {
       </div>
       <div className="row">
         <div className="col-12">
-          {/* Controlli Filtri e Ordinamento (invariati) */}
+          {/* Controlli Filtri e Ordinamento */}
           <div className='d-flex flex-wrap align-items-end gap-3 mb-4 filterbar'>
             {/* Filtro Nome */}
             <div>
@@ -237,7 +250,8 @@ const ProductsPage = () => {
               </select>
             </div>
             <div>
-              <div className="btn btn-success" onSubmit={handleShare}>Cerca</div>
+              {/* Ho rimosso l'onSubmit da qui, non è un form e il pulsante non fa nulla */}
+              <div className="btn btn-primary">Filtra/Cerca</div> 
             </div>
           </div>
           {/* Pulsante Condividi */}
@@ -255,6 +269,7 @@ const ProductsPage = () => {
         </div>
       </div>
 
+      {/* Controllo di Paginazione Superiore */}
       {totalPages > 1 && (
         <div className="row">
           <div className="col-12 d-flex justify-content-center my-4">
@@ -291,10 +306,20 @@ const ProductsPage = () => {
         {/* PAGINAZIONE: 6. Usa 'paginatedProducts' per il rendering */}
         {paginatedProducts.length > 0 ? (
           paginatedProducts.map(product => {
+            // CORREZIONE CRITICA: Controlla se il prodotto è nel carrello e passa le props
+            const isInCart = cartItems.some(item => item.id == product.id);
+            
             return (
               <Card_Prod
                 key={product.id}
-                {...product} />
+                {...product} 
+                toggleFavorite={toggleFavorite} 
+                isFavorite={favorites.includes(product.id)}
+                
+                // PASSAGGIO DELLE PROPS DEL CARRELLO
+                onAddToCart={() => handleAddToCart(product)} 
+                isInCart={isInCart} 
+              />
             )
           })
         ) : (
@@ -305,7 +330,7 @@ const ProductsPage = () => {
         )}
       </div>
 
-      {/* PAGINAZIONE: 7. Aggiungi i controlli di paginazione */}
+      {/* PAGINAZIONE: 7. Aggiungi i controlli di paginazione inferiori */}
       {totalPages > 1 && (
         <div className="row">
           <div className="col-12 d-flex justify-content-center">

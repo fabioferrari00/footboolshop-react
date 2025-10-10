@@ -52,7 +52,7 @@ const Card_Prod = (
                 >
                   <FontAwesomeIcon icon={isInCart ? faCheckCircle : faShoppingCart} />
                   {/* Testo leggermente accorciato per la Card */}
-                  {isInCart ? 'Aggiunto' : 'Aggiungi al carrello'}
+                  {isInCart ? 'Aggiungi ancora' : 'Aggiungi al carrello'}
                 </button>
 
             </div>
