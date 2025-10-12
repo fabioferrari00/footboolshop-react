@@ -1,6 +1,7 @@
 import Jumbotron from '../src/components/Jumbotron'
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
+import SerieASpinner from '../src/components/SerieASpinner';
 
 import { useFavorites } from "../src/components/FavoritesContext";
 
@@ -38,6 +39,7 @@ const HomePage = () => {
 
   return (
     <>
+      <SerieASpinner />
       <Jumbotron />
       <div className="container">
 
