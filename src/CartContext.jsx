@@ -126,7 +126,7 @@ export const CartProvider = ({ children }) => {
     addItem,
     removeItem,
     updateQuantity,
-    
+
   };
 
   return (

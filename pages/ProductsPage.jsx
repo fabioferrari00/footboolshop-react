@@ -52,7 +52,6 @@ const ProductsPage = () => {
       // Il carrello è gestito dal Context, ma i preferiti li teniamo qui via localStorage.
       const savedFavorites = JSON.parse(localStorage.getItem('favorites') || '[]');
       setFavorites(savedFavorites);
-      console.log(savedFavorites)
     }).catch((err) => {
       console.error(err);
     });
@@ -107,14 +106,14 @@ const ProductsPage = () => {
       [name]: value,
     }));
   };
-    
+
   // RECUPERATA: Funzione per aggiungere al carrello
   const handleAddToCart = (product) => {
-    addItem(product, 1); 
-    
+    addItem(product, 1);
+
     // Messaggio di conferma che scompare dopo 3 secondi
     setCartMessage(`"${product.name}" aggiunto al carrello! (Totale: ${itemCount + 1})`);
-    setTimeout(() => setCartMessage(''), 3000); 
+    setTimeout(() => setCartMessage(''), 3000);
   };
 
 
@@ -122,7 +121,7 @@ const ProductsPage = () => {
   const handleSortChange = (event) => {
     setStagedSortOrder(event.target.value);
   };
-  
+
   // CORRETTA: Logica dei preferiti via localStorage (solo una funzione)
   const toggleFavorite = (productId) => {
     setFavorites(prevFavorites => {
@@ -350,17 +349,17 @@ const ProductsPage = () => {
           paginatedProducts.map(product => {
             // Controlla se il prodotto è nel carrello e passa le props
             const isInCart = cartItems.some(item => item.id == product.id);
-            
+
             return (
               <Card_Prod
                 key={product.id}
-                {...product} 
-                toggleFavorite={toggleFavorite} 
+                {...product}
+                toggleFavorite={toggleFavorite}
                 isFavorite={favorites.includes(product.id)}
-                
+
                 // PASSAGGIO DELLE PROPS DEL CARRELLO
-                onAddToCart={() => handleAddToCart(product)} 
-                isInCart={isInCart} 
+                onAddToCart={() => handleAddToCart(product)}
+                isInCart={isInCart}
               />
             )
           })

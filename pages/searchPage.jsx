@@ -64,7 +64,6 @@ const SearchPage = () => {
 
     // 1. Costruisci i parametri della query dinamicamente
     const params = new URLSearchParams();
-    console.log(params)
     // Per json-server, per la ricerca full-text sul campo 'name' 
     // e 'team_name', si usa spesso il parametro 'q'.
     // Alternativamente, se vuoi un match esatto sui campi:
