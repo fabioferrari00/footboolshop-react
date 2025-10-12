@@ -7,6 +7,8 @@ import emailjs from "@emailjs/browser";
 
 export default function CheckoutPage() {
 
+  const [errors, setErrors] = useState({});
+
   function getFormattedCartItems() {
     const LOCAL_STORAGE_KEY = 'shoppingCart';
 
@@ -65,6 +67,18 @@ export default function CheckoutPage() {
       items,
     };
 
+    // 🔍 Controllo campi vuoti
+    const newErrors = {};
+    Object.entries(form).forEach(([key, value]) => {
+      if (!value.trim()) newErrors[key] = "Campo obbligatorio";
+    });
+
+    if (Object.keys(newErrors).length > 0) {
+      setErrors(newErrors);
+      return; // ⛔ blocca l’invio
+    }
+
+    setErrors({}); // ✅ nessun errore, procedi
     setMessage(null);
 
     try {
@@ -98,7 +112,6 @@ export default function CheckoutPage() {
         import.meta.env.VITE_EMAILJS_PUBLIC_KEY
       );
 
-      console.log("✅ Email inviata con successo!");
     } catch (err) {
       console.error("Errore:", err);
       setMessage({ type: "error", text: "Errore nell'invio. Riprova." });
@@ -135,12 +148,12 @@ export default function CheckoutPage() {
                   <h2 className="h5 mb-3">Dati cliente</h2>
                   <form onSubmit={handleSubmit}>
                     <div className="row g-3">
-                      <Field label="Nome" name="user_name" value={form.user_name} onChange={handleChange} placeholder="Es. Alex" />
-                      <Field label="Cognome" name="user_surname" value={form.user_surname} onChange={handleChange} placeholder="Es. Dessanai" />
-                      <Field type="email" label="Email" name="user_mail" value={form.user_mail} onChange={handleChange} placeholder="esempio@mail.com" />
-                      <Field label="Telefono" name="user_phone" value={form.user_phone} onChange={handleChange} placeholder="Es. +39 349 1234567" />
-                      <Field label="Città" name="user_city" value={form.user_city} onChange={handleChange} placeholder="Es. Cagliari" />
-                      <Field label="Indirizzo" name="user_address" value={form.user_address} onChange={handleChange} placeholder="Es. Via Roma 15" full />
+                      <Field label="Nome" name="user_name" value={form.user_name} onChange={handleChange} placeholder="Es. Alex" error={errors.user_name} />
+                      <Field label="Cognome" name="user_surname" value={form.user_surname} onChange={handleChange} placeholder="Es. Dessanai" error={errors.user_surname} />
+                      <Field type="email" label="Email" name="user_mail" value={form.user_mail} onChange={handleChange} placeholder="esempio@mail.com" error={errors.user_mail} />
+                      <Field label="Telefono" name="user_phone" value={form.user_phone} onChange={handleChange} placeholder="Es. +39 349 1234567" error={errors.user_phone} />
+                      <Field label="Città" name="user_city" value={form.user_city} onChange={handleChange} placeholder="Es. Cagliari" error={errors.user_city} />
+                      <Field label="Indirizzo" name="user_address" value={form.user_address} onChange={handleChange} placeholder="Es. Via Roma 15" full error={errors.user_address} />
                     </div>
 
                     <div className="d-flex gap-2 mt-4">
@@ -189,7 +202,7 @@ export default function CheckoutPage() {
 }
 
 //funzione per che crea oggetto 
-function Field({ label, name, value, onChange, type = "text", placeholder, full = false }) {
+function Field({ label, name, value, onChange, type = "text", placeholder, full = false, error }) {
   return (
     <div className={full ? "col-12" : "col-12 col-md-6"}>
       <label className="form-label">{label}</label>
@@ -199,8 +212,9 @@ function Field({ label, name, value, onChange, type = "text", placeholder, full 
         value={value}
         placeholder={placeholder}
         onChange={onChange}
-        className="form-control"
+        className={`form-control ${error ? "is-invalid" : ""}`}
       />
+      {error && <div className="invalid-feedback">{error}</div>}
     </div>
   );
 }

@@ -1,22 +1,18 @@
 import Jumbotron from '../src/components/Jumbotron'
-import React from 'react'
-import { Link } from 'react-router-dom'
 import axios from 'axios';
 import { useState, useEffect, useCallback } from 'react';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faHeart as solidHeart } from '@fortawesome/free-solid-svg-icons';
-import { faHeart as regularHeart } from '@fortawesome/free-regular-svg-icons';
+
 import { useFavorites } from "../src/components/FavoritesContext";
 
 import Card_Prod from '../src/components/Card_Prod';
 // Importiamo l'hook per il Carrello
-import { useCart } from '../src/CartContext'; 
+import { useCart } from '../src/CartContext';
 
 const HomePage = () => {
 
   const [products, setProducts] = useState([]);
   const { favorites, toggleFavorite } = useFavorites();
-  
+
   // 1. ESTRAIAMO LE FUNZIONI DEL CARRELLO
   const { addItem, items: cartItems } = useCart();
   const [cartMessage, setCartMessage] = useState(''); // Per feedback utente (opzionale)
@@ -30,11 +26,11 @@ const HomePage = () => {
   useEffect(() => {
     fetchProducts();
   }, []);
-  
+
   // 2. FUNZIONE PER AGGIUNGERE AL CARRELLO
   const handleAddToCart = useCallback((product) => {
-    addItem(product, 1); 
-    
+    addItem(product, 1);
+
     setCartMessage(`"${product.name}" aggiunto!`);
     setTimeout(() => setCartMessage(''), 3000);
   }, [addItem]);
@@ -44,29 +40,29 @@ const HomePage = () => {
     <>
       <Jumbotron />
       <div className="container">
-        
+
         {/* Messaggio di conferma carrello */}
         {cartMessage && <div className="alert alert-info mt-2">{cartMessage}</div>}
-        
+
         <div className="row gy-3">
           <div className="col-12 d-flex justify-content-center my-4">
             <h2 className='title_section mt-5'>ARTICOLI PIU RECENTI</h2>
           </div>
           {products.map((product) => {
             if (product.arrival_date >= "2025-10-02") {
-              
+
               // 3. LOGICA: Controlla se il prodotto è già nel carrello
               const isInCart = cartItems.some(item => item.id == product.id);
 
               return (
                 <Card_Prod
                   key={product.id}
-                  {...product} 
-                  toggleFavorite={toggleFavorite} 
+                  {...product}
+                  toggleFavorite={toggleFavorite}
                   isFavorite={favorites.includes(product.id)}
-                  
+
                   // 4. PASSIAMO LE PROPS DEL CARRELLO
-                  onAddToCart={() => handleAddToCart(product)} 
+                  onAddToCart={() => handleAddToCart(product)}
                   isInCart={isInCart}
                 />
               )
@@ -81,19 +77,19 @@ const HomePage = () => {
           </div>
           {products.map((product) => {
             if (product.size == "XXS" || product.size == 36) {
-              
+
               // 3. LOGICA: Controlla se il prodotto è già nel carrello
               const isInCart = cartItems.some(item => item.id == product.id);
 
               return (
                 <Card_Prod
                   key={product.id}
-                  {...product} 
-                  toggleFavorite={toggleFavorite} 
+                  {...product}
+                  toggleFavorite={toggleFavorite}
                   isFavorite={favorites.includes(product.id)}
-                  
+
                   // 4. PASSIAMO LE PROPS DEL CARRELLO
-                  onAddToCart={() => handleAddToCart(product)} 
+                  onAddToCart={() => handleAddToCart(product)}
                   isInCart={isInCart}
                 />
               )
