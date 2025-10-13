@@ -23,9 +23,9 @@ const SearchPage = () => {
 
 
 
-  const [stagedSortOrder, setStagedSortOrder] = useState('default');
-  const [uniqueSizes, setUniqueSizes] = useState([]);
-  const [uniqueTeams, setUniqueTeams] = useState([]);
+  const [stagedSortOrder, setStagedSortOrder] = useState('default')
+  const [uniqueSizes, setUniqueSizes] = useState([`S`, `M`, `L`, `XL`, `37`, `38`, `39`, `40`, `41`, `42`, `43`, `44`, `45`, `46`, `47`]);
+  const [uniqueTeams, setUniqueTeams] = useState([`Cagliari`, `Inter`, `Juventus`, `Milan`, `Napoli`]);
   const [stagedFilters, setStagedFilters] = useState({
     name: '',
     size: '',
@@ -58,47 +58,40 @@ const SearchPage = () => {
 
 
 
+  // SEZIONE DEI FILTRI DA UTILIZZARE SE MODIFICATO IL DATABASE 
 
 
+  // const fetchAllDataForFilters = async () => {
+  //   try {
+  //     // Chiamata 1: Recupera le Taglie
+  //     const sizesRes = await axios.get('http://localhost:3000/search/sizes');
+  //     // Assumiamo che la risposta sia un array di oggetti: [{id: 1, name: "XS"}, {id: 2, name: "S"}, ...]
+  //     // Estraiamo solo il campo che rappresenta la taglia, e ordiniamo.
+  //     const sizeNames = sizesRes.data.map(item => item.name || item.size || item.id);
 
-  const fetchAllDataForFilters = async () => {
-    try {
-      // Chiamata 1: Recupera le Taglie
-      const sizesRes = await axios.get('http://localhost:3000/search/sizes');
-      // Assumiamo che la risposta sia un array di oggetti: [{id: 1, name: "XS"}, {id: 2, name: "S"}, ...]
-      // Estraiamo solo il campo che rappresenta la taglia, e ordiniamo.
-      const sizeNames = sizesRes.data.map(item => item.name || item.size || item.id);
+  //     // Logica di ordinamento comune (opzionale, ma consigliata)
+  //     setUniqueSizes(sizeNames.sort((a, b) => {
+  //       const order = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+  //       return order.indexOf(a) - order.indexOf(b);
+  //     }));
 
-      // Logica di ordinamento comune (opzionale, ma consigliata)
-      setUniqueSizes(sizeNames.sort((a, b) => {
-        const order = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
-        return order.indexOf(a) - order.indexOf(b);
-      }));
+  //     // Chiamata 2: Recupera i Team
+  //     const teamsRes = await axios.get('http://localhost:3000/search/teamName');
 
-      // Chiamata 2: Recupera i Team
-      const teamsRes = await axios.get('http://localhost:3000/search/teamName');
+  //     const teamNames = teamsRes.data.map(item => item.name || item.team_name || item.id);
+  //     setUniqueTeams(teamNames.sort());
 
-      const teamNames = teamsRes.data.map(item => item.name || item.team_name || item.id);
-      setUniqueTeams(teamNames.sort());
-
-    } catch (err) {
-      console.error("Errore nel recupero dei dati per i filtri dagli endpoint dedicati:", err);
-      // È cruciale che il tuo db.json contenga gli endpoint /sizes e /team_names
-      // con una struttura come: { "sizes": [{"name": "S"}, {"name": "M"}, ... ] }
-    }
-  };
-
-
-  useEffect(() => {
-    fetchAllDataForFilters();
-  }, [])
+  //   } catch (err) {
+  //     console.error("Errore nel recupero dei dati per i filtri dagli endpoint dedicati:", err);
+  //     // È cruciale che il tuo db.json contenga gli endpoint /sizes e /team_names
+  //     // con una struttura come: { "sizes": [{"name": "S"}, {"name": "M"}, ... ] }
+  //   }
+  // };
 
 
-
-
-
-
-
+  // useEffect(() => {
+  //   fetchAllDataForFilters();
+  // }, [])
 
 
   // La funzione per costruire e lanciare la chiamata API
@@ -108,9 +101,6 @@ const SearchPage = () => {
 
     // 1. Costruisci i parametri della query dinamicamente
     const params = new URLSearchParams();
-    // Per json-server, per la ricerca full-text sul campo 'name' 
-    // e 'team_name', si usa spesso il parametro 'q'.
-    // Alternativamente, se vuoi un match esatto sui campi:
 
     const name = searchParams.get('name'); // es. /search?name=maglia
     const team_name = searchParams.get('team_name'); // es. /search?team_name=Juventus
@@ -119,10 +109,6 @@ const SearchPage = () => {
     if (name) params.append('name', name); // Cerca prodotti il cui nome contiene il testo
     if (team_name) params.append('team_name', team_name);
     if (size) params.append('size', size);
-
-    // NOTA: Se vuoi cercare "maglia" in tutti i campi (name E team_name) usa 'q':
-    // if (name) params.append('q', name); 
-    // Consiglio di usare 'name_like' e i filtri esatti come fatto sopra per maggiore controllo.
 
     const url = `http://localhost:3000/search?${params.toString()}`; // Ricerca su /products
     try {
