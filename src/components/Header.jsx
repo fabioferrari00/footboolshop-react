@@ -61,7 +61,7 @@ const { itemCount } = useCart();
                   <span className="cart-count-badge">{itemCount}</span>
                   )}
                   </div>
-                    <span className="ms-2 d-none d-sm-inline">Carrello</span>
+                    <span className="ms-2  d-sm-inline">Carrello</span>
                   </Link>
 
                 <Link className="nav-item nav-link" to={`/contacts`} onClick={closeMenu}>
