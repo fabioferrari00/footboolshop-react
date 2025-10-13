@@ -1,5 +1,7 @@
 import React, { useEffect, useState } from "react";
 import emailjs from "@emailjs/browser";
+import axios from "axios";
+
 
 // chiave per localStorage
 const LS_KEY = "welcome_seen_v1";
@@ -12,8 +14,14 @@ export default function WelcomePopup({ onSubmit }) {
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [errors, setErrors] = useState({});
   const [confirmationVisible, setConfirmationVisible] = useState(false);
+  const API_BASE = "http://localhost:3000";
 
 
+  // helper per salvare i dati dell'utente 
+  async function saveUser({ name, mail }) {
+    const res = await axios.post(`${API_BASE}/users`, { name, mail });
+    return res.data;
+  }
   // mostra il popup solo se non è già stato visto
   useEffect(() => {
     const seen = localStorage.getItem(LS_KEY);
@@ -38,8 +46,16 @@ export default function WelcomePopup({ onSubmit }) {
   };
 
   // invio form
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
+    //chiamata db per registrare la mai, se positivo invia mail, se negativo err
+    try {
+      await saveUser({ name: name.trim(), mail: mail.trim() });
+    } catch (err) {
+      console.error("Errore salvataggio utente:", err);
+      alert("Errore nel salvataggio, riprova più tardi.");
+      return; // interrompe il flusso: niente email se non salviamo
+    }
     if (!validate()) return;
 
     onSubmit?.({ name: name.trim(), mail: mail.trim(), date: new Date().toISOString() });
