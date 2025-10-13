@@ -50,13 +50,18 @@ const { itemCount } = useCart();
                   <FontAwesomeIcon icon={faShirt} /> Prodotti</Link>
                 <Link className="nav-item nav-link" to={`/favorites`} onClick={closeMenu}>
                   <FontAwesomeIcon icon={faHeart}     />  Preferiti
+                
                 </Link>
                 {/* style={{ color: 'red', marginRight: '5px' }} */}
                 <Link className="nav-item nav-link" to={`/cart`} onClick={closeMenu}>
-                  <FontAwesomeIcon icon={faCartShopping} /> Carrello
+                        
+                <div className=" position-relative d-inline-block"> 
+                  <FontAwesomeIcon icon={faCartShopping}   size="lg" /> 
                    {itemCount > 0 && (
                   <span className="cart-count-badge">{itemCount}</span>
                   )}
+                  </div>
+                    <span className="ms-2  d-sm-inline">Carrello</span>
                   </Link>
 
                 <Link className="nav-item nav-link" to={`/contacts`} onClick={closeMenu}>
