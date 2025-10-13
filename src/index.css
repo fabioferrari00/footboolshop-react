@@ -271,10 +271,15 @@ main {
     justify-content: space-around;
 }
 
+
+
+
 .cart-count-badge {
+    position: absolute;
+    top: -05px;      
     right: -10px;
-    background-color: rgb(255, 60, 0);
-    color: white;
+    background-color:rgb(235, 232, 232);
+    color:rgb(131, 130, 130);
     border-radius: 50%;
     padding: 2px 6px;
     font-size: 12px;
@@ -283,6 +288,7 @@ main {
     min-width: 18px;
     text-align: center;
     margin-left: 5px;
+     z-index: 99;
 }
 
 
