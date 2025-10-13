@@ -24,7 +24,7 @@ const SearchPage = () => {
 
 
   const [stagedSortOrder, setStagedSortOrder] = useState('default');
-  const [uniqueSizes, setUniqueSizes] = useState([`M`, `L`, `XL`, `42`, `43`, `44`, `XXS`, `36`]);
+  const [uniqueSizes, setUniqueSizes] = useState([`M`, `L`, `XL`, `42`, `43`, `44`, `XXS`, `36`,]);
   const [uniqueTeams, setUniqueTeams] = useState([`Cagliari`, `Inter`, `Juventus`, `Milan`, `Napoli`]);
   const [stagedFilters, setStagedFilters] = useState({
     name: '',
