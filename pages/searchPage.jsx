@@ -57,6 +57,50 @@ const SearchPage = () => {
   };
 
 
+
+
+
+
+  const fetchAllDataForFilters = async () => {
+    try {
+      // Chiamata 1: Recupera le Taglie
+      const sizesRes = await axios.get('http://localhost:3000/search/sizes');
+      // Assumiamo che la risposta sia un array di oggetti: [{id: 1, name: "XS"}, {id: 2, name: "S"}, ...]
+      // Estraiamo solo il campo che rappresenta la taglia, e ordiniamo.
+      const sizeNames = sizesRes.data.map(item => item.name || item.size || item.id);
+
+      // Logica di ordinamento comune (opzionale, ma consigliata)
+      setUniqueSizes(sizeNames.sort((a, b) => {
+        const order = ['XS', 'S', 'M', 'L', 'XL', 'XXL'];
+        return order.indexOf(a) - order.indexOf(b);
+      }));
+
+      // Chiamata 2: Recupera i Team
+      const teamsRes = await axios.get('http://localhost:3000/search/teamName');
+
+      const teamNames = teamsRes.data.map(item => item.name || item.team_name || item.id);
+      setUniqueTeams(teamNames.sort());
+
+    } catch (err) {
+      console.error("Errore nel recupero dei dati per i filtri dagli endpoint dedicati:", err);
+      // È cruciale che il tuo db.json contenga gli endpoint /sizes e /team_names
+      // con una struttura come: { "sizes": [{"name": "S"}, {"name": "M"}, ... ] }
+    }
+  };
+
+
+  useEffect(() => {
+    fetchAllDataForFilters();
+  }, [])
+
+
+
+
+
+
+
+
+
   // La funzione per costruire e lanciare la chiamata API
   const fetchSearchResults = async () => {
     setLoading(true);
