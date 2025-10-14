@@ -177,11 +177,11 @@ export default function CheckoutPage() {
   };
 
   return (
-    <div className="bg-light min-vh-100 py-5">
-      <div className="container">
+    <div className="bg-light min-vh-100 py-4 overflow-x-hidden">
+      <div className="container px-3" >
         {/* Header */}
-        <div className="text-center mb-4">
-          <h1 className="display-6 fw-bold text-primary mt-2">Completa il tuo ordine</h1>
+        <div className="text-center mb-2">
+          <h1 className="display-6 fw-bold text-primary">Completa il tuo ordine</h1>
           <p className="text-muted">Inserisci i tuoi dati, rivedi il riepilogo e conferma.</p>
         </div>
 
@@ -197,11 +197,11 @@ export default function CheckoutPage() {
 
         {/* Mostra form e riepilogo solo se l'ordine NON è stato inviato */}
         {message?.type !== "success" && (
-          <div className="row g-4">
+          <div className="row g-5">
             {/* Form */}
             <div className="col-12 col-lg-8">
-              <div className="card shadow-sm border-0">
-                <div className="card-body p-4">
+              <div className="shadow-sm border bg-body rounded-4 p-3 p-md-4">
+                <div className="card-body p-3 p-md-4">
                   <h2 className="h5 mb-3">Dati cliente</h2>
 
                   {/* CODICE SCONTO */}
@@ -242,7 +242,7 @@ export default function CheckoutPage() {
                   </div>
 
                   <form onSubmit={handleSubmit}>
-                    <div className="row g-3">
+                    <div className="row g-2">
                       <Field
                         label="Nome"
                         name="user_name"
@@ -296,7 +296,7 @@ export default function CheckoutPage() {
                     </div>
 
                     <div className="d-flex gap-2 mt-4">
-                      <button type="submit" className="btn btn-primary px-4">
+                      <button type="submit" className="btn btn-primary w-100">
                         Paga
                       </button>
                     </div>
@@ -314,7 +314,7 @@ export default function CheckoutPage() {
                     {items.map((it, idx) => (
                       <li key={idx} className="list-group-item d-flex justify-content-between align-items-start px-0">
                         <div className="me-3">
-                          <div className="fw-semibold">{it.product_name}</div>
+                          <div className="fw-semibold text-break">{it.product_name}</div>
                           <small className="text-muted">Quantità: {it.quantity}</small>
                         </div>
                         <span className="fw-semibold text-primary">
