@@ -211,7 +211,7 @@ export default function CheckoutPage() {
                       <input
                         type="text"
                         className="form-control"
-                        placeholder="Seguici su Snstagram per ottenere un codice sconto "
+                        placeholder="Seguici su Instagram per ottenere un codice sconto "
                         value={discountCode}
                         onChange={(e) => setDiscountCode(e.target.value)}
                         disabled={!!discount}
