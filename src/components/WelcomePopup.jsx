@@ -2,7 +2,6 @@ import React, { useEffect, useState } from "react";
 import emailjs from "@emailjs/browser";
 import axios from "axios";
 
-
 // chiave per localStorage
 const LS_KEY = "welcome_seen_v1";
 
@@ -13,15 +12,28 @@ export default function WelcomePopup({ onSubmit }) {
   const [mail, setMail] = useState("");
   const [termsAccepted, setTermsAccepted] = useState(false);
   const [errors, setErrors] = useState({});
-  const [confirmationVisible, setConfirmationVisible] = useState(false);
   const API_BASE = "http://localhost:3000";
 
+  // stato toast
+  const [toast, setToast] = useState({
+    visible: false,
+    type: "success", // "success" | "error" | "info"
+    message: "",
+  });
 
-  // helper per salvare i dati dell'utente 
+  function showToast(type, message) {
+    setToast({ visible: true, type, message });
+    setTimeout(() => {
+      setToast((t) => ({ ...t, visible: false }));
+    }, 2500);
+  }
+
+  // helper per salvare i dati dell'utente
   async function saveUser({ name, mail }) {
     const res = await axios.post(`${API_BASE}/users`, { name, mail });
     return res.data;
   }
+
   // mostra il popup solo se non è già stato visto
   useEffect(() => {
     const seen = localStorage.getItem(LS_KEY);
@@ -48,22 +60,24 @@ export default function WelcomePopup({ onSubmit }) {
   // invio form
   const handleSubmit = async (e) => {
     e.preventDefault();
-    //chiamata db per registrare la mai, se positivo invia mail, se negativo err
+
+    // 1) valida subito
+    if (!validate()) return;
+
+    // 2) salva su DB
     try {
       await saveUser({ name: name.trim(), mail: mail.trim() });
     } catch (err) {
       console.error("Errore salvataggio utente:", err);
-      alert("Errore nel salvataggio, riprova più tardi.");
-      return; // interrompe il flusso: niente email se non salviamo
+      showToast("error", "Errore nel salvataggio, riprova più tardi.");
+      return; // interrompe: niente email se non salviamo
     }
-    if (!validate()) return;
 
+    // 3) callback esterna opzionale
     onSubmit?.({ name: name.trim(), mail: mail.trim(), date: new Date().toISOString() });
 
-    const templateParams = {
-      name: name.trim(),
-      mail: mail.trim(),
-    };
+    // 4) invio email
+    const templateParams = { name: name.trim(), mail: mail.trim() };
 
     emailjs
       .send(
@@ -74,39 +88,71 @@ export default function WelcomePopup({ onSubmit }) {
       )
       .then(
         () => {
-          setConfirmationVisible(true);
-          setTimeout(() => {
-            setConfirmationVisible(false);
-            closeForever();
-          }, 2000);
+          // Mostra toast e CHIUDI SUBITO il popup
+          showToast("success", "Email inviata! Controlla la posta.");
+          closeForever();
+          // (opzionale) reset campi
+          setName("");
+          setMail("");
+          setTermsAccepted(false);
+          setErrors({});
         },
         (err) => {
           console.error("Errore invio email:", err);
-          alert("Errore nell'invio dell'email, riprova più tardi.");
+          showToast("error", "Errore nell'invio dell'email, riprova più tardi.");
         }
       );
-
   };
+
   // annulla = chiudi e salva come visto
   const handleCancel = () => {
     closeForever();
   };
 
-  // se non deve apparire, non renderizza niente
-  if (!visible) return null;
-
   return (
-    <div
-      className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
-      style={{ background: "rgba(0,0,0,0.55)", zIndex: 2000 }}
-    >
-      <div className="bg-white rounded-4 shadow p-4" style={{ width: "min(92vw, 520px)" }}>
-        {!confirmationVisible ? (
-          <>
+    <>
+      {/* TOAST - sempre renderizzato, anche se il popup è chiuso */}
+      {toast.visible && (
+        <div
+          role="status"
+          aria-live="polite"
+          className="position-fixed bottom-0 start-50 translate-middle-x mb-4 px-4 py-3 rounded-3 shadow d-flex align-items-center gap-2"
+          style={{
+            zIndex: 3000,
+            minWidth: "280px",
+            background:
+              toast.type === "error"
+                ? "#dc3545"
+                : toast.type === "success"
+                  ? "#198754"
+                  : "#0d6efd",
+            color: "#fff",
+          }}
+        >
+          <strong className="me-1">
+            {toast.type === "error" ? "Errore" : toast.type === "success" ? "Fatto" : "Info"}
+          </strong>
+          <span className="flex-grow-1">{toast.message}</span>
+          <button
+            type="button"
+            className="btn-close btn-close-white ms-2"
+            aria-label="Chiudi"
+            onClick={() => setToast((t) => ({ ...t, visible: false }))}
+          />
+        </div>
+      )}
+
+      {/* POPUP */}
+      {visible && (
+        <div
+          className="position-fixed top-0 start-0 w-100 h-100 d-flex align-items-center justify-content-center"
+          style={{ background: "rgba(0,0,0,0.55)", zIndex: 2000 }}
+        >
+          <div className="bg-white rounded-4 shadow p-4" style={{ width: "min(92vw, 520px)" }}>
             <h3 className="mb-3">Benvenuto/a! 👋</h3>
             <p className="text-secondary mb-4">
-              Occasione unica. Alla prima visita su FootBoolShop puoi ottenere uno sconto del 20% sul primo ordine.
-              Inserisci la mail e riceverai subito un codice.
+              Occasione unica. Alla prima visita su FootBoolShop puoi ottenere uno sconto del 20% sul
+              primo ordine. Inserisci la mail e riceverai subito un codice.
             </p>
 
             <form onSubmit={handleSubmit} noValidate>
@@ -158,34 +204,21 @@ export default function WelcomePopup({ onSubmit }) {
               </div>
 
               {/* info privacy */}
-              <p className="small text-muted mb-4">
-                I tuoi dati saranno trattati in conformità al GDPR.
-              </p>
+              <p className="small text-muted mb-4">I tuoi dati saranno trattati in conformità al GDPR.</p>
 
-              {/* Q U I D E V I personalizzare i bottoni se vuoi cambiare colori */}
+              {/* bottoni */}
               <div className="d-flex gap-2 justify-content-end">
-                <button
-                  type="button"
-                  className="btn btn-custom btn-cancel"
-                  onClick={handleCancel}
-                >
+                <button type="button" className="btn btn-secondary" onClick={handleCancel}>
                   Annulla
                 </button>
-                <button type="submit" className="btn btn-custom btn-send">
+                <button type="submit" className="btn btn-primary">
                   Invia
                 </button>
               </div>
             </form>
-          </>
-        ) : (
-          // messaggio di conferma dopo invio
-          <div className="text-center py-5">
-            <h4>Controlla la tua mail</h4>
-            <p className="text-secondary">Ti abbiamo inviato il codice sconto del 20%</p>
           </div>
-        )}
-      </div>
-    </div>
+        </div>
+      )}
+    </>
   );
-
 }
